@@ -30,9 +30,16 @@ public class Encrypt {
    *         algorithm, it returns the original message
    */
   public static String encrypt(String message, String key, int type) {
-    // TODO: COMPLETE THIS METHOD
-
-    return null; // TODO: to be modified
+    switch (type) {
+      case 0:
+        // TODO check if it's correct
+        return Helper.bytesToString(caesar(Helper.stringToBytes(message), Helper.stringToBytes(key)[0]));
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+    }
+    return message;
   }
 
   // -----------------------Caesar-------------------------
@@ -58,16 +65,6 @@ public class Encrypt {
       if (spaceEncoding) // si l'on code l'espace " "
         tab[i] = (byte) (plainText[i] + key);
 
-      // Si l'addition de la clé dépasse les bornes, on recommence a -128 ou 127
-      if ((byte) (plainText[i] + key) > 127) {
-
-        plainText[i] = (byte) (plainText[i] + key - 256);
-
-      } else if ((plainText[i] + key) < -128) {
-
-        plainText[i] = (byte) (plainText[i] + key + 256);
-      }
-
       else { // si l'on ne code pas les epaces
         switch (plainText[i]) {
           case (byte) 32:
@@ -79,12 +76,9 @@ public class Encrypt {
       }
     }
 
-    // Valeur attendue pour le cipherText: {-101, 32, -87, -109, -96, -90}
-
     assert (plainText != null);
-    // TODO: COMPLETE THIS METHOD
 
-    return tab; // TODO: to be modified
+    return tab;
 
   }
 
@@ -97,8 +91,7 @@ public class Encrypt {
    * @return an encoded byte array
    */
   public static byte[] caesar(byte[] plainText, byte key) {
-    // TODO: COMPLETE THIS METHOD
-    return caesar(plainText, key, true); // TODO: to be modified
+    return caesar(plainText, key, false);
   }
 
   // -----------------------XOR-------------------------

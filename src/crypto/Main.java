@@ -1,8 +1,6 @@
 package crypto;
 
-import static crypto.Helper.cleanString;
-import static crypto.Helper.stringToBytes;
-import static crypto.Helper.bytesToString;
+import crypto.Helper;
 
 /*
  * Part 1: Encode (with note that one can reuse the functions to decode)
@@ -18,10 +16,10 @@ public class Main {
     String inputMessage = Helper.readStringFromFile("text_one.txt");
     String key = "2cF%5";
 
-    String messageClean = cleanString(inputMessage);
+    String messageClean = Helper.cleanString(inputMessage);
 
-    byte[] messageBytes = stringToBytes(messageClean);
-    byte[] keyBytes = stringToBytes(key);
+    byte[] messageBytes = Helper.stringToBytes(messageClean);
+    byte[] keyBytes = Helper.stringToBytes(key);
 
     System.out.println("Original input sanitized : " + messageClean);
     System.out.println();
@@ -37,20 +35,20 @@ public class Main {
   public static void testCaesar(byte[] string, byte key) {
     // Encoding
     byte[] result = Encrypt.caesar(string, key);
-    String s = bytesToString(result);
+    String s = Helper.bytesToString(result);
     System.out.println("Encoded : " + s);
 
     // Decoding with key
-    String sD = bytesToString(Encrypt.caesar(result, (byte) (-key)));
+    String sD = Helper.bytesToString(Encrypt.caesar(result, (byte) (-key)));
     System.out.println("Decoded knowing the key : " + sD);
 
     // Decoding without key
     byte[][] bruteForceResult = Decrypt.caesarBruteForce(result);
     String sDA = Decrypt.arrayToString(bruteForceResult);
-    Helper.writeStringToFile(sDA, "bruteForceCaesar.txt");
+    // TODO Helper.writeStringToFile(sDA, "bruteForceCaesar.txt");
 
     byte decodingKey = Decrypt.caesarWithFrequencies(result);
-    String sFD = bytesToString(Encrypt.caesar(result, decodingKey));
+    String sFD = Helper.bytesToString(Encrypt.caesar(result, decodingKey));
     System.out.println("Decoded without knowing the key : " + sFD);
   }
 
