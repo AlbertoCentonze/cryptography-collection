@@ -34,13 +34,17 @@ public class Main {
   // Run the Encoding and Decoding using the caesar pattern
   public static void testCaesar(byte[] string, byte key) {
     // Encoding
+    System.out.println("Encoding with Caesar");
+    System.out.println("String: " + string);
+    System.out.println("Key: " + key);
     byte[] result = Encrypt.caesar(string, key);
     String s = Helper.bytesToString(result);
-    System.out.println("Encoded : " + s);
+    System.out.println("Encoded: " + s);
 
-    // Decoding with key
+    // Decoding with key 
+    System.out.println("Decoding with reverse key");
     String sD = Helper.bytesToString(Encrypt.caesar(result, (byte) (-key)));
-    System.out.println("Decoded knowing the key : " + sD);
+    System.out.println(sD);
 
     // Decoding without key
     byte[][] bruteForceResult = Decrypt.caesarBruteForce(result);
@@ -53,5 +57,14 @@ public class Main {
   }
 
   // TODO : TO BE COMPLETED
-
+  public static void TestStringEquality(String string1, String string2, String info) {
+	  if (string1.equals(string2))
+		System.out.println("TEST PASSED - " + info);
+	  else
+		System.out.println("TEST FAILED - " + info);
+		  
+  }
 }
+
+  
+  

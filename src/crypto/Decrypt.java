@@ -1,7 +1,6 @@
 package crypto;
 
-import static crypto.Helper.bytesToString;
-import static crypto.Helper.stringToBytes;
+import crypto.Helper;
 
 import java.util.ArrayList;
 import java.util.Collections;

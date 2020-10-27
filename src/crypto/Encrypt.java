@@ -57,28 +57,26 @@ public class Encrypt {
     assert (plainText != null);
 
     // Création tableau qui va changer les byte
-    byte tab[] = new byte[plainText.length];
+    byte cipher[] = new byte[plainText.length];
 
     // Remplissage du tableau
     for (int i = 0; i < plainText.length; i++) {
 
       if (spaceEncoding) // si l'on code l'espace " "
-        tab[i] = (byte) (plainText[i] + key);
+        cipher[i] = (byte) (plainText[i] + key);
 
       else { // si l'on ne code pas les epaces
         switch (plainText[i]) {
           case (byte) 32:
-            tab[i] = 32;
+            cipher[i] = 32;
             break;
           default:
-            tab[i] = (byte) (plainText[i] + (byte) key);
+            cipher[i] = (byte) (plainText[i] + key);
         }
       }
     }
 
-    assert (plainText != null);
-
-    return tab;
+    return cipher;
 
   }
 
@@ -157,8 +155,33 @@ public class Encrypt {
    * @return an encoded byte array
    */
   public static byte[] vigenere(byte[] plainText, byte[] keyword, boolean spaceEncoding) {
-    // TODO: COMPLETE THIS METHOD
-    return null; // TODO: to be modified
+	assert (plainText != null);
+
+    // Création tableau qui va changer les byte
+    byte cipher[] = new byte[plainText.length];
+
+    // Remplissage du tableau
+      if (spaceEncoding) { // si l'on code l'espace " "
+		for (int i = 0; i < plainText.length; i++) {
+		  int keywordPointer = i % keyword.length;
+
+		  cipher[i] = (byte) (plainText[i] + keyword[keywordPointer]);
+		}}
+      else { // si l'on ne code pas les epaces
+		for (int i = 0; i < plainText.length; i++) {
+		  int keywordPointer = i % keyword.length;
+        switch (plainText[i]) {
+          case (byte) 32:
+            cipher[i] = 32;
+            break;
+          default:
+            cipher[i] = (byte) (plainText[i] + keyword[keywordPointer]);
+            break;
+        }
+      }
+    }
+
+    return cipher;
   }
 
   /**
