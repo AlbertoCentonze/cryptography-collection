@@ -115,6 +115,31 @@ public class Encrypt {
 	 * @return an encoded byte array
 	 */
 	public static byte[] xor(byte[] plainText, byte key, boolean spaceEncoding) {
+		
+		
+		//création d'un tableau a deux dimensions : nombre de lettres (plainText.length) 
+													//et nombre de bit que chaque lettre aura (égal à 8)
+		byte tab [][]= new byte [plainText.length][8];
+				
+		//Remplissage du tableau
+		for(int i =0; i<plainText.length;i++) {
+			
+			// Transformation de chaque nombre (mot)en bit 
+			for(int j=0; j<8; j++) {
+				
+			//un mot = un tableau de 8 places rempli avec des 1 ou 0	
+				do {									
+				int calcul= plainText[i]/2;
+	    		int résultat = plainText[i]%2;
+	    	    tab [i][j]=(byte)résultat;
+	    	
+	    	}while(plainText[i]==0);
+			
+		}
+		}
+		
+		
+		
 		// TODO: COMPLETE THIS METHOD
 		return null; // TODO: to be modified
 	}
