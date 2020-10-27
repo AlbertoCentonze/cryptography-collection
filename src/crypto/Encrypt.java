@@ -52,10 +52,24 @@ public class Encrypt {
 		 	
 		 //Remplissage du tableau 
 		 for(int i = 0; i < plainText.length; i++) {
-			 	
-		
+			 
+			 
 			 	if(spaceEncoding) //si l'on code l'espace "  "
-          tab[i]= (byte) (plainText[i] + (byte)key); 	
+          tab[i]= (byte) (plainText[i] + (byte)key);
+			 	
+			 	
+			 	
+			 	//Si l'addition de la clé dépasse les bornes, on recommence a -128 ou 127
+			 	if((byte) (plainText[i] + (byte)key) > 127) {
+			
+			 		plainText[i]= (byte) (plainText[i] + (byte)key -256);
+			
+			 	} else if((plainText[i] + (byte)key) < -128){
+			
+			 		plainText[i]= plainText[i]= (byte) (plainText[i] + (byte)key + 256);
+			 	}
+				
+							 	 			 				 	
         else { //si l'on ne code pas les epaces
           switch(plainText[i]){
             case (byte) 32:
