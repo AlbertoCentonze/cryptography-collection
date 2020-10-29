@@ -1,7 +1,5 @@
 package crypto;
 
-import crypto.Helper;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,9 +52,15 @@ public class Decrypt {
    * @return a 2D byte array containing all the possibilities
    */
   public static byte[][] caesarBruteForce(byte[] cipher) {
-    // TODO : COMPLETE THIS METHOD
+    byte[][] result = new byte[255][cipher.length];
+    for (Integer i = 0; i < result.length; ++i) {
+      final Integer LOWER_BOUND = -128;
+      Integer integerKey = LOWER_BOUND + i;
+      byte byteKey = integerKey.byteValue();
 
-    return null; // TODO: to be modified
+      result[i] = Encrypt.caesar(cipher, byteKey);
+    }
+    return result;
   }
 
   /**

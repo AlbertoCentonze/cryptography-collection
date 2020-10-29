@@ -71,7 +71,7 @@ public class Encrypt {
 
       else { // si l'on ne code pas les epaces
         switch (plainText[i]) {
-          case (byte) SPACE:
+          case SPACE:
             cipher[i] = SPACE;
             break;
           default:
@@ -175,7 +175,7 @@ public class Encrypt {
       for (int i = 0; i < plainText.length; i++) {
         int keywordPointer = i % keyword.length;
         switch (plainText[i]) {
-          case (byte) SPACE:
+          case SPACE:
             cipher[i] = SPACE;
             break;
           default:
