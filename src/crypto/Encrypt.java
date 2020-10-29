@@ -31,7 +31,7 @@ public class Encrypt {
    */
   public static String encrypt(String message, String key, int type) {
     switch (type) {
-        // TODO check if it's correct
+      // TODO check if it's correct
       case CAESAR:
         return Helper.bytesToString(caesar(Helper.stringToBytes(message), Helper.stringToBytes(key)[0]));
       case VIGENERE:
@@ -241,9 +241,9 @@ public class Encrypt {
    */
   public static byte[] generatePad(int size) {
     // TODO: COMPLETE THIS METHOD
-
-    return null; // TODO: to be modified
-
+    long seed = 12345; // Keep it or not?
+    Random r = new Random(seed);
+    return new byte[] { (byte) r.nextInt(size) };
   }
 
 }
