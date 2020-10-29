@@ -31,13 +31,17 @@ public class Encrypt {
    */
   public static String encrypt(String message, String key, int type) {
     switch (type) {
-      case 0:
         // TODO check if it's correct
+      case CAESAR:
         return Helper.bytesToString(caesar(Helper.stringToBytes(message), Helper.stringToBytes(key)[0]));
-      case 1:
-      case 2:
-      case 3:
-      case 4:
+      case VIGENERE:
+        return Helper.bytesToString(vigenere(Helper.stringToBytes(message), Helper.stringToBytes(key)));
+      case XOR:
+        return Helper.bytesToString(xor(Helper.stringToBytes(message), Helper.stringToBytes(key)[0]));
+      case ONETIME:
+        return Helper.bytesToString(oneTimePad(Helper.stringToBytes(message), Helper.stringToBytes(key)));
+      case CBC:
+        return Helper.bytesToString(cbc(Helper.stringToBytes(message), Helper.stringToBytes(key)));
     }
     return message;
   }
@@ -134,12 +138,12 @@ public class Encrypt {
    * Method to encode a byte array using a XOR with a single byte long key spaces
    * are not encoded
    * 
-   * @param key the byte we will use to XOR
+   * @param plaintext the byte array representing the string to encode
+   * @param key       the byte we will use to XOR
    * @return an encoded byte array
    */
   public static byte[] xor(byte[] plainText, byte key) {
-    // TODO: COMPLETE THIS METHOD
-    return null; // TODO: to be modified
+    return xor(plainText, key, false);
   }
   // -----------------------Vigenere-------------------------
 
@@ -155,21 +159,21 @@ public class Encrypt {
    * @return an encoded byte array
    */
   public static byte[] vigenere(byte[] plainText, byte[] keyword, boolean spaceEncoding) {
-	assert (plainText != null);
+    assert (plainText != null);
 
     // Création tableau qui va changer les byte
     byte cipher[] = new byte[plainText.length];
 
     // Remplissage du tableau
-      if (spaceEncoding) { // si l'on code l'espace " "
-		for (int i = 0; i < plainText.length; i++) {
-		  int keywordPointer = i % keyword.length;
+    if (spaceEncoding) { // si l'on code l'espace " "
+      for (int i = 0; i < plainText.length; i++) {
+        int keywordPointer = i % keyword.length;
 
-		  cipher[i] = (byte) (plainText[i] + keyword[keywordPointer]);
-		}}
-      else { // si l'on ne code pas les epaces
-		for (int i = 0; i < plainText.length; i++) {
-		  int keywordPointer = i % keyword.length;
+        cipher[i] = (byte) (plainText[i] + keyword[keywordPointer]);
+      }
+    } else { // si l'on ne code pas les epaces
+      for (int i = 0; i < plainText.length; i++) {
+        int keywordPointer = i % keyword.length;
         switch (plainText[i]) {
           case (byte) 32:
             cipher[i] = 32;
@@ -195,8 +199,7 @@ public class Encrypt {
    * @return an encoded byte array
    */
   public static byte[] vigenere(byte[] plainText, byte[] keyword) {
-    // TODO: COMPLETE THIS METHOD
-    return null; // TODO: to be modified
+    return vigenere(plainText, keyword, false);
   }
 
   // -----------------------One Time Pad-------------------------
