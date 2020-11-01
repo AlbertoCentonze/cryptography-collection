@@ -1,6 +1,9 @@
 package crypto;
 
 import java.util.Random;
+
+import sun.net.www.content.text.plain;
+
 import java.util.Arrays;
 import static crypto.Helper.*;
 
@@ -167,14 +170,17 @@ public class Encrypt {
         cipheredText[i] = (byte) (plainText[i] + keyword[keywordPointer]);
       }
     } else { // si l'on ne code pas les epaces
+      int encodedLettersCounter = 0;
       for (int i = 0; i < plainText.length; i++) {
-        int keywordPointer = i % keyword.length;
+        int keywordPointer = encodedLettersCounter % keyword.length;
+        cipheredText[i] = (byte) (plainText[i] + keyword[keywordPointer]);
         switch (plainText[i]) {
           case SPACE:
             cipheredText[i] = SPACE;
             break;
           default:
             cipheredText[i] = (byte) (plainText[i] + keyword[keywordPointer]);
+            ++encodedLettersCounter;
             break;
         }
       }
