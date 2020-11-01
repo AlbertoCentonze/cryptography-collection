@@ -16,6 +16,7 @@ public class Decrypt {
       0.06094, 0.07546, 0.00153, 0.01292, 0.04025, 0.02406, 0.06749, 0.07507, 0.01929, 0.00095, 0.07587, 0.06327,
       0.09356, 0.02758, 0.00978, 0.0256, 0.0015, 0.01994, 0.00077 };
 
+
   /**
    * Method to break a string encoded with different types of cryptosystems
    * 
@@ -148,8 +149,31 @@ public class Decrypt {
    * @return the length of the key
    */
   public static int vigenereFindKeyLength(List<Byte> cipher) {
-    // TODO : COMPLETE THIS METHOD
-    return -1; // TODO: to be modified
+	            
+	  ArrayList< ArrayList<Byte> >  stock = new ArrayList< ArrayList<Byte> >();
+	  
+   for(int i=0;i<cipher.size();i++){
+		  		   
+	   ArrayList<Byte> shiftedCipher= new ArrayList<Byte>();	
+	   
+	   
+      for(int j=i+1;j<cipher.size();j++){	
+    	        
+    	  shiftedCipher.add(cipher.get(j));
+    	  
+    	  int Coincidence = 0;
+    	  
+			  if(cipher.contains(shiftedCipher.get(j))){
+				  ++Coincidence;
+		        }
+      		}
+     
+	  
+	  
+	  
+	  int key=-1;
+	  
+    return key; 
   }
 
   /**
