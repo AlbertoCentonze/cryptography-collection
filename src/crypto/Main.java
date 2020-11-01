@@ -12,7 +12,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-	  testBruteForceXor();
+    testRandomOtp();
   }
 
   // TODO : TO BE COMPLETED
@@ -32,17 +32,17 @@ public class Main {
   }
 
   public static void testRapidVigenere() {
-    byte[] output = Encrypt.vigenere(new byte[] { 105, 32, 119, 97, 110, 116 }, new byte[] {50, -10, 100} );
+    byte[] output = Encrypt.vigenere(new byte[] { 105, 32, 119, 97, 110, 116 }, new byte[] { 50, -10, 100 });
     for (byte b : output) {
       System.out.println(b);
     }
   }
 
-  public static void testBruteForceCaesar(){
+  public static void testBruteForceCaesar() {
     byte[] cipheredText = Encrypt.caesar(new byte[] { 105, 32, 119, 97, 110, 116 }, (byte) 50);
     byte[][] result = Decrypt.caesarBruteForce(cipheredText);
     String resultString = "";
-    for (byte[] possibleLine : result ){
+    for (byte[] possibleLine : result) {
       resultString += Helper.bytesToString(possibleLine);
       resultString += " ==++== ";
     }
@@ -50,7 +50,7 @@ public class Main {
 
   }
 
-  public static void testXor(){
+  public static void testXor() {
     byte[] cipheredText = Encrypt.xor(new byte[] { 105, 32, 119, 97, 110, 116 }, (byte) 50);
     for (byte element : cipheredText)
       System.out.println(element);
@@ -59,16 +59,39 @@ public class Main {
       System.out.println(element);
   }
 
-  public static void testBruteForceXor(){
+  public static void testBruteForceXor() {
     byte[] cipheredText = Encrypt.xor(new byte[] { 105, 32, 119, 97, 110, 116 }, (byte) 50);
-          
+
     byte[][] result = Decrypt.xorBruteForce(cipheredText);
     String resultString = "";
-    for (byte[] possibleLine : result ){
+    for (byte[] possibleLine : result) {
       resultString += Helper.bytesToString(possibleLine);
       resultString += " ==++== ";
     }
     Helper.writeStringToFile(resultString, "bruteForceXor.txt");
 
   }
+
+  public static void testOtp() {
+    byte[] cipheredText = Encrypt.oneTimePad(new byte[] { 105, 32, 119, 97, 110, 116 },
+        new byte[] { 105, 32, 119, 97, 110, 116 });
+    for (byte element : cipheredText)
+      System.out.println(element);
+    byte[] decipheredText = Encrypt.oneTimePad(cipheredText, new byte[] { 105, 32, 119, 97, 110, 116 });
+    for (byte element : decipheredText)
+      System.out.println(element);
+  }
+
+  public static void testRandomOtp() {
+    byte[] key = Encrypt.generatePad(6);
+    for (byte element : key)
+      System.out.println(element);
+    byte[] cipheredText = Encrypt.oneTimePad(new byte[] { 105, 32, 119, 97, 110, 116 }, key);
+    for (byte element : cipheredText)
+      System.out.println(element);
+    byte[] decipheredText = Encrypt.oneTimePad(cipheredText, key);
+    for (byte element : decipheredText)
+      System.out.println(element);
+  }
+
 }

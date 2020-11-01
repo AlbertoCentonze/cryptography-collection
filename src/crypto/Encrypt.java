@@ -14,6 +14,8 @@ public class Encrypt {
 
   public static final byte SPACE = 32;
 
+  public static final int LOWER_BOUND = -128;
+
   final static Random rand = new Random();
 
   // -----------------------General-------------------------
@@ -119,11 +121,9 @@ public class Encrypt {
           default:
             cipheredText[i] = (byte) (plainText[i] ^ key);
         }
-      }
-      else{
+      } else {
         cipheredText[i] = (byte) (plainText[i] ^ key);
       }
-
     }
 
     return cipheredText;
@@ -208,8 +208,13 @@ public class Encrypt {
    * @return an encoded byte array
    */
   public static byte[] oneTimePad(byte[] plainText, byte[] pad) {
-    // TODO: COMPLETE THIS METHOD
-    return null; // TODO: to be modified
+    byte[] cipheredText = Arrays.copyOf(plainText, plainText.length);
+
+    for (int i = 0; i < cipheredText.length; i++) {
+      cipheredText[i] = (byte) (plainText[i] ^ pad[i]);
+    }
+
+    return cipheredText;
   }
 
   // -----------------------Basic CBC-------------------------
@@ -235,10 +240,11 @@ public class Encrypt {
    * @return random bytes in an array
    */
   public static byte[] generatePad(int size) {
-    // TODO: COMPLETE THIS METHOD
-    long seed = 12345; // Keep it or not?
-    Random r = new Random(seed);
-    return new byte[] { (byte) r.nextInt(size) };
+    byte[] randomByteSequence = new byte[size];
+    for (int i = 0; i < size; ++i) {
+      randomByteSequence[i] = (byte) (LOWER_BOUND + rand.nextInt(256));
+    }
+    return randomByteSequence;
   }
 
 }
