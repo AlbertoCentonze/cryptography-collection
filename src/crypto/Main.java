@@ -12,7 +12,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testBruteForceCaesar();
+    testXor();
   }
 
   // TODO : TO BE COMPLETED
@@ -48,5 +48,14 @@ public class Main {
     }
     Helper.writeStringToFile(resultString, "bruteForceCaesar.txt");
 
+  }
+
+  public static void testXor(){
+    byte[] cipheredText = Encrypt.xor(new byte[] { 105, 32, 119, 97, 110, 116 }, (byte) 50);
+    for (byte element : cipheredText)
+      System.out.println(element);
+    byte[] decipheredText = Encrypt.xor(cipheredText, (byte) 50);
+    for (byte element : decipheredText)
+      System.out.println(element);
   }
 }
