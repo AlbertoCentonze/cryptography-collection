@@ -111,9 +111,20 @@ public class Decrypt {
    * @return the array of possibilities for the clear text
    */
   public static byte[][] xorBruteForce(byte[] cipher) {
-    // TODO : COMPLETE THIS METHOD
+	    
+	  final int LOWER_BOUND = -128;
+	    byte[][] result = new byte[255][cipher.length];
+	    for (int i = 0; i < result.length; ++i) {
+	      Integer integerKey = Integer.valueOf(LOWER_BOUND + i);
+	      
+	      byte byteKey = integerKey.byteValue();
 
-    return null; // TODO: to be modified
+	      result[i] = Encrypt.xor(cipher, byteKey);
+	    }
+	    return result;
+	  	  
+
+    //return null; // TODO: to be modified
   }
 
   // -----------------------Vigenere-------------------------
