@@ -88,8 +88,23 @@ public class Decrypt {
    * @return the character frequencies as an array of float
    */
   public static float[] computeFrequencies(byte[] cipherText) {
-    // TODO : COMPLETE THIS METHOD
-    return null; // TODO: to be modified
+    
+	float [] frequencies = new float [256];
+	
+	for(int i=0; i<frequencies.length; i++) {
+	float coincidence=0;
+			if(i==32) {
+				continue;
+			}		
+		for (int j=0; j<frequencies.length; j++) {
+			
+			if(cipherText[j]==(i-128)) {
+				++coincidence;
+			}
+		}
+		frequencies [i] = coincidence/256;				
+	}		  	  
+    return frequencies; 
   }
 
   /**

@@ -2,8 +2,6 @@ package crypto;
 
 import java.util.Random;
 
-import sun.net.www.content.text.plain;
-
 import java.util.Arrays;
 import static crypto.Helper.*;
 

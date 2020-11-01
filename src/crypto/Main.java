@@ -14,7 +14,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-	  testRemoveSpaces();
+	  testCaesarFrequences();
   }
 
   // TODO : TO BE COMPLETED
@@ -107,4 +107,16 @@ public class Main {
 	  
   }
 
+  public static void testCaesarFrequences() {
+	  
+	  byte[] cipherText = new byte[] { (byte) 105, (byte) 32, (byte) 119, (byte) 97, (byte) 110, (byte) 116 };
+	  
+	  float [] frequencies = Decrypt.computeFrequencies(cipherText);
+	  
+	  for(int i=0; i < frequencies.length; i++){
+          System.out.println( frequencies[i] );
+      }
+	  
+	  
+  }
 }
