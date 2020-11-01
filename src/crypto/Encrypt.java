@@ -234,7 +234,9 @@ public class Encrypt {
    * @return an encoded byte array
    */
   public static byte[] cbc(byte[] plainText, byte[] iv) {
-    // TODO: COMPLETE THIS METHOD
+
+
+	  
 
     return null; // TODO: to be modified
   }

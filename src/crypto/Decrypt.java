@@ -1,6 +1,7 @@
 package crypto;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.Map;
 
 public class Decrypt {
 
+  public static final byte SPACE = 32;
+	
   public static final int ALPHABETSIZE = Byte.MAX_VALUE - Byte.MIN_VALUE + 1; // 256
   public static final int APOSITION = 97 + ALPHABETSIZE / 2;
 
@@ -149,8 +152,16 @@ public class Decrypt {
    * @return a List of bytes without spaces
    */
   public static List<Byte> removeSpaces(byte[] array) {
-    // TODO : COMPLETE THIS METHOD
-    return null;
+	  
+	  ArrayList<Byte> noSpace = new ArrayList<Byte>();
+
+	  for(int i=0; i<array.length; i++) {
+		 
+		  if (array[i]!=SPACE && i<array.length) {
+			  noSpace.add(array[i]);
+		  }
+	  } 	  
+    return noSpace;
   }
 
   /**
@@ -161,30 +172,30 @@ public class Decrypt {
    */
   public static int vigenereFindKeyLength(List<Byte> cipher) {
 	            
-	  ArrayList< ArrayList<Byte> >  stock = new ArrayList< ArrayList<Byte> >();
+	  //ArrayList< ArrayList<Byte> >  stock = new ArrayList< ArrayList<Byte> >();
+	  ArrayList<Byte> stock = new ArrayList <Byte>();
 	  
    for(int i=0;i<cipher.size();i++){
 		  		   
-	   ArrayList<Byte> shiftedCipher= new ArrayList<Byte>();	
-	   
-	   
-      for(int j=i+1;j<cipher.size();j++){	
+	   ArrayList<Byte> shiftedCipher= new ArrayList<Byte>();
+	   	   
+      for(int j=i+1;j<cipher.size();j++){
     	        
     	  shiftedCipher.add(cipher.get(j));
-    	  
-    	  int Coincidence = 0;
-    	  
-			  if(cipher.contains(shiftedCipher.get(j))){
+    	   byte Coincidence = 0; 
+    	 	  
+			  if(cipher.contains(shiftedCipher.get(j))) {
 				  ++Coincidence;
-		        }
-      		}
-     
+		        }			  
+			  shiftedCipher.add(Coincidence);
+      		}     	  	  
 	  
-	  
-	  
+      
+      
 	  int key=-1;
 	  
-    return key; 
+    return key;
+   
   }
 
   /**

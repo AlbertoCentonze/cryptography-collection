@@ -1,5 +1,7 @@
 package crypto;
 
+import java.util.ArrayList;
+
 import crypto.Helper;
 
 /*
@@ -12,7 +14,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testRapidVigenere();
+	  testRemoveSpaces();
   }
 
   // TODO : TO BE COMPLETED
@@ -92,6 +94,17 @@ public class Main {
     byte[] decipheredText = Encrypt.oneTimePad(cipheredText, key);
     for (byte element : decipheredText)
       System.out.println(element);
+  }
+  
+  public static void testRemoveSpaces() {
+	  
+	  byte[] cipheredText  = new byte[] { (byte) 105, (byte) 32, (byte) 119, (byte) 97, (byte) 110, (byte) 116 };
+	  ArrayList<Byte> noSpace= new ArrayList<Byte> (Decrypt.removeSpaces(cipheredText));
+	  
+	  for(int i=0; i < noSpace.size(); i++){
+          System.out.println( noSpace.get(i) );
+      }
+	  
   }
 
 }
