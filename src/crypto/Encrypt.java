@@ -232,11 +232,23 @@ public class Encrypt {
    * @return an encoded byte array
    */
   public static byte[] cbc(byte[] plainText, byte[] iv) {
+    int blockLength = iv.length;
+    byte[] cihperedText = new byte[plainText.length];
+    byte[] key = Arrays.copyOf(iv, blockLength);
+    int iterationsRequired = (int) Math.ceil((double) plainText.length / blockLength);
+    int currentIteration = 0;
+    while (currentIteration < iterationsRequired) {
+      int startIndex = currentIteration * blockLength;
+      int endIndex = (currentIteration + 1) * blockLength - 1;
+      byte[] cipheredPart = Arrays.copyOfRange(plainText, startIndex, endIndex);
+      cipheredPart = Encrypt.oneTimePad(cipheredPart, key);
+      key = cipheredPart;
+      for (int i = startIndex; i <= endIndex; ++i) {
+        cihperedText[i] = cipheredPart[i % blockLength];
+      }
+    }
 
-
-	  
-
-    return null; // TODO: to be modified
+    return cihperedText;
   }
 
   /**

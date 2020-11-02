@@ -57,7 +57,7 @@ public class Decrypt {
    */
   public static byte[][] caesarBruteForce(byte[] cipher) {
     final int LOWER_BOUND = -128;
-    byte[][] result = new byte[255][cipher.length];
+    byte[][] result = new byte[256][cipher.length];
     for (int i = 0; i < result.length; ++i) {
       Integer integerKey = Integer.valueOf(LOWER_BOUND + i);
       byte byteKey = integerKey.byteValue();
