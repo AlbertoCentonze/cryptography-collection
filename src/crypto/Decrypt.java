@@ -92,11 +92,11 @@ public class Decrypt {
 	float [] frequencies = new float [256];
 	
 	for(int i=0; i<frequencies.length; i++) {
-	float coincidence=0;
+	float coincidence = 0;
 			if(i==32) {
 				continue;
 			}		
-		for (int j=0; j<frequencies.length; j++) {
+		for (int j=0; j<cipherText.length; ++j) {
 			
 			if(cipherText[j]==(i-128)) {
 				++coincidence;
@@ -237,8 +237,23 @@ public class Decrypt {
    * @return the clear text
    */
   public static byte[] decryptCBC(byte[] cipher, byte[] iv) {
-    // TODO : COMPLETE THIS METHOD
-    return null; // TODO: to be modified
-  }
+	  int blockLength = iv.length;
+	    byte[] decihperedText = new byte[cipher.length];
+	    byte[] key = Arrays.copyOf(iv, blockLength);
+	    int iterationsRequired = (int) Math.ceil((double) cipher.length / blockLength);
+	    int currentIteration = 0;
+	    while (currentIteration < iterationsRequired) {
+	      int startIndex = currentIteration * blockLength;
+	      int endIndex = (currentIteration + 1) * blockLength - 1;
+	      byte[] decipheredPart = Arrays.copyOfRange(cipher, startIndex, endIndex);
+	      decipheredPart = Encrypt.oneTimePad(decipheredPart, key);
+	      key = Arrays.copyOfRange(cipher, startIndex, endIndex);
+	      for (int i = startIndex; i <= endIndex; ++i) {
+	        decihperedText[i] = decipheredPart[i % blockLength];
+	      }
+	    }
+
+	    return decihperedText;
+	  }
 
 }
