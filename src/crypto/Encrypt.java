@@ -1,11 +1,15 @@
 package crypto;
 
+import java.util.Scanner;
+
 import java.util.Random;
 
 import java.util.Arrays;
 import static crypto.Helper.*;
 
 public class Encrypt {
+	
+private static Scanner scanner = new Scanner(System.in);
 
   public static final int CAESAR = 0;
   public static final int VIGENERE = 1;
@@ -264,5 +268,97 @@ public class Encrypt {
     }
     return randomByteSequence;
   }
-
+public static void shell () {
+	
+	
+	//demande code ou decode, recommence si reponse n'est pas correcte
+	String answer = ""; String s1 =  "code";  String s2 ="decode"; int i = 0;	
+	do {
+	System.out.println("Do you want to code a message or to decode a message ? (Write code or decode) : ");
+	 answer +=  scanner.nextLine();	
+	if(answer.equals(s1) || answer.equals(s2)){
+		++i;
+	}
+	}while(i==0);	
+	
+	//Si l'on code
+	if( answer.equals(s1) ) {
+				
+		//Demande le message à l'utilisateur, demande tant qu'il n'est pas null.
+		String message;
+		do {					
+		System.out.println("Write down the message you want to code : ");	     
+		message = scanner.nextLine();
+		}while(message!=null);
+		
+		
+		//Savoir avec quelle methode, demande tant que la méthode est incorrecte
+		String methode;	String m1 = "CAESAR"; String m2 = "VIGENERE"; String m3 ="XOR"; String m4 ="ONETIME";  String m5 ="CBC";
+		do {					
+		System.out.println("Your message can be coded with Caesar, Vigenere, Xor, Onetime or CBC. Which one do you want ? (Write it in capital letters, ex : Xor => XOR) : ");
+		methode = scanner.nextLine();
+		if(answer.equals(m1) || answer.equals(m2)|| answer.equals(m3)|| answer.equals(m4)|| answer.equals(m5)){
+			++i;
+		}
+		} while(i==0);
+		
+		//Avec CAESAR
+		if(methode.equals(m1)) {
+			
+			//Savoir la clé, tant qu'elle n'est pas nulle
+			System.out.println("Which key do you want to use (Write a number) ? : ");
+			if()
+		}
+		//Avec VIGENERE
+		else if (methode.equals(m2)){
+			
+			//Savoir la clé, tant qu'elle n'est pas nulle		
+			System.out.println("Which key do you want to use (Write a number) ? : ");
+		}
+		//AvecXOR
+		else if (methode.equals(m3)){
+			
+			//Savoir la clé, tant qu'elle n'est pas nulle
+			System.out.println("Which key do you want to use (Write a number) ? : ");
+		}
+		//Avec ONETIME
+		else if (methode.equals(m4)){
+			
+			//Savoir la clé, tant qu'elle n'est pas nulle
+			System.out.println("Which key do you want to use (Write a number) ? : ");
+		}
+		//Avec CBC
+		else if (methode.equals(m5)){
+			
+			//Savoir la clé, tant qu'elle n'est pas nulle
+		System.out.println("What's your key (Write a number):");
+		int key = 	
+					
+		} 				
+	} 
+	//Si l'on decode
+	else if(answer.equals(s2)  ) {
+		String message;
+	
+		//Demande le message à l'utilisateur, demande tant qu'il n'est pas null.
+		do {			
+			System.out.println("Write down the message you want to decode : ");
+			message = scanner.nextLine();
+			}while(message!=null);
+		
+		//Savoir avec quelle methode, demande tant que la méthode est incorrecte
+		String methode;	String m1 = "caesarbruteforce"; String m2 = "caesarwithfrequencies"; String m3 ="xorbruteforce"; String m4 ="vigenerewithfrequencies";  String m5 ="decryptcbc";
+		do {					
+		System.out.println("Your message can be decoded with CaesarBruteForce, CaesarWithFrequencies, XorBruteForce, VigenereWithFrequencies or DecryptCBC. Which one do you want ? (Write it in lowercase letter, ex : DecryptCBC => decryptcbc) : ");
+		methode = scanner.nextLine();
+		if(answer.equals(m1) || answer.equals(m2)|| answer.equals(m3)|| answer.equals(m4)|| answer.equals(m5)){
+			++i;
+		}
+		} while(i==0);
+	
+	
+	
+  }
 }
+}
+
