@@ -19,7 +19,10 @@ public class Decrypt {
       0.06094, 0.07546, 0.00153, 0.01292, 0.04025, 0.02406, 0.06749, 0.07507, 0.01929, 0.00095, 0.07587, 0.06327,
       0.09356, 0.02758, 0.00978, 0.0256, 0.0015, 0.01994, 0.00077 };
 
-
+  public static final int CAESAR = 0;
+  public static final int VIGENERE = 1;
+  public static final int XOR = 2;
+  
   /**
    * Method to break a string encoded with different types of cryptosystems
    * 
@@ -28,6 +31,17 @@ public class Decrypt {
    * @return the decoded string or the original encoded message if type is not in
    *         the list above.
    */
+  public static String decrypt(String message, String key, int type) {
+	    switch (type) {
+	 case CAESAR:
+	        return Helper.bytesToString(caesarWithFrequencies(Helper.stringToBytes(message)));
+	 case VIGENERE:
+	        return Helper.bytesToString(vigenereWithFrequencies(Helper.stringToBytes(message)));
+	 case XOR:
+	    	return Helper.bytesToString(xorBruteForce(Helper.stringToBytes(message)));	      	    	    
+	    }
+	    return message;
+  }
   public static String breakCipher(String cipher, int type) {
     // TODO : COMPLETE THIS METHOD
 
