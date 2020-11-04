@@ -10,7 +10,7 @@ import java.util.Map;
 public class Decrypt {
 
   public static final byte SPACE = 32;
-	
+
   public static final int ALPHABETSIZE = Byte.MAX_VALUE - Byte.MIN_VALUE + 1; // 256
   public static final int APOSITION = 97 + ALPHABETSIZE / 2;
 
@@ -143,20 +143,19 @@ public class Decrypt {
    * @return the array of possibilities for the clear text
    */
   public static byte[][] xorBruteForce(byte[] cipher) {
-	    
-	  final int LOWER_BOUND = -128;
-	    byte[][] result = new byte[255][cipher.length];
-	    for (int i = 0; i < result.length; ++i) {
-	      Integer integerKey = Integer.valueOf(LOWER_BOUND + i);
-	      
-	      byte byteKey = integerKey.byteValue();
 
-	      result[i] = Encrypt.xor(cipher, byteKey);
-	    }
-	    return result;
-	  	  
+    final int LOWER_BOUND = -128;
+    byte[][] result = new byte[255][cipher.length];
+    for (int i = 0; i < result.length; ++i) {
+      Integer integerKey = Integer.valueOf(LOWER_BOUND + i);
 
-    //return null; // TODO: to be modified
+      byte byteKey = integerKey.byteValue();
+
+      result[i] = Encrypt.xor(cipher, byteKey);
+    }
+    return result;
+
+    // return null; // TODO: to be modified
   }
 
   // -----------------------Vigenere-------------------------
@@ -181,15 +180,15 @@ public class Decrypt {
    * @return a List of bytes without spaces
    */
   public static List<Byte> removeSpaces(byte[] array) {
-	  
-	  ArrayList<Byte> noSpace = new ArrayList<Byte>();
 
-	  for(int i=0; i<array.length; i++) {
-		 
-		  if (array[i]!=SPACE && i<array.length) {
-			  noSpace.add(array[i]);
-		  }
-	  } 	  
+    ArrayList<Byte> noSpace = new ArrayList<Byte>();
+
+    for (int i = 0; i < array.length; i++) {
+
+      if (array[i] != SPACE && i < array.length) {
+        noSpace.add(array[i]);
+      }
+    }
     return noSpace;
   }
 
@@ -200,31 +199,29 @@ public class Decrypt {
    * @return the length of the key
    */
   public static int vigenereFindKeyLength(List<Byte> cipher) {
-	            
-	  //ArrayList< ArrayList<Byte> >  stock = new ArrayList< ArrayList<Byte> >();
-	  ArrayList<Byte> stock = new ArrayList <Byte>();
-	  
-   for(int i=0;i<cipher.size();i++){
-		  		   
-	   ArrayList<Byte> shiftedCipher= new ArrayList<Byte>();
-	   	   
-      for(int j=i+1;j<cipher.size();j++){
-    	        
-    	  shiftedCipher.add(cipher.get(j));
-    	   byte Coincidence = 0; 
-    	 	  
-			  if(cipher.contains(shiftedCipher.get(j))) {
-				  ++Coincidence;
-		        }			  
-			  shiftedCipher.add(Coincidence);
-      		}     	  	  
-	  
-      
-      
-	  int key=-1;
-	  
-    return key;
-   
+
+    /*
+     * ArrayList< ArrayList<Byte> > stock = new ArrayList< ArrayList<Byte> >();
+     * ArrayList<Byte> stock = new ArrayList <Byte>();
+     * 
+     * for(int i=0;i<cipher.size();i++){
+     * 
+     * ArrayList<Byte> shiftedCipher= new ArrayList<Byte>();
+     * 
+     * for(int j=i+1;j<cipher.size();j++){
+     * 
+     * shiftedCipher.add(cipher.get(j)); byte Coincidence = 0;
+     * 
+     * if(cipher.contains(shiftedCipher.get(j))) { ++Coincidence; }
+     * shiftedCipher.add(Coincidence); }
+     * 
+     * 
+     * 
+     * int key=-1;
+     * 
+     * return key;
+     */
+    return 0;
   }
 
   /**

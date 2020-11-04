@@ -14,7 +14,9 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-	  testCaesarFrequences();
+    // String text = Helper.readStringFromFile("long_text.txt");
+    // testComputeFrequencies(text);
+    testDecryptCBC();
   }
 
   // TODO : TO BE COMPLETED
@@ -95,28 +97,48 @@ public class Main {
     for (byte element : decipheredText)
       System.out.println(element);
   }
-  
+
   public static void testRemoveSpaces() {
-	  
-	  byte[] cipheredText  = new byte[] { (byte) 105, (byte) 32, (byte) 119, (byte) 97, (byte) 110, (byte) 116 };
-	  ArrayList<Byte> noSpace= new ArrayList<Byte> (Decrypt.removeSpaces(cipheredText));
-	  
-	  for(int i=0; i < noSpace.size(); i++){
-          System.out.println( noSpace.get(i) );
-      }
-	  
+
+    byte[] cipheredText = new byte[] { (byte) 105, (byte) 32, (byte) 119, (byte) 97, (byte) 110, (byte) 116 };
+    ArrayList<Byte> noSpace = new ArrayList<Byte>(Decrypt.removeSpaces(cipheredText));
+
+    for (int i = 0; i < noSpace.size(); i++) {
+      System.out.println(noSpace.get(i));
+    }
+
   }
 
   public static void testCaesarFrequences() {
-	  
-	  byte[] cipherText = new byte[] { (byte) 105, (byte) 32, (byte) 119, (byte) 97, (byte) 110, (byte) 116 };
-	  
-	  float [] frequencies = Decrypt.computeFrequencies(cipherText);
-	  
-	  for(int i=0; i < frequencies.length; i++){
-          System.out.println( frequencies[i] );
-      }
-	  
-	  
+
+    byte[] cipherText = new byte[] { (byte) 105, (byte) 32, (byte) 119, (byte) 97, (byte) 110, (byte) 116 };
+
+    float[] frequencies = Decrypt.computeFrequencies(cipherText);
+
+    for (int i = 0; i < frequencies.length; i++) {
+      System.out.println(frequencies[i]);
+    }
+
+  }
+
+  public static void testComputeFrequencies(String text) {
+    byte[] textByte = Helper.stringToBytes(Helper.cleanString(text));
+    float[] frequencies = Decrypt.computeFrequencies(textByte);
+
+    String output = "";
+    for (int i = 0; i < frequencies.length; ++i) {
+      output += (char) i;
+      output += " equals ";
+      output += frequencies[i];
+    }
+    Helper.writeStringToFile(output, "frequenciesOutput.txt");
+  }
+
+  public static void testDecryptCBC() {
+    byte[] key = new byte[] { 5, -17 };
+    byte[] cipher = Encrypt.cbc(new byte[] { 10, 28, 30, 45, 56 }, key);
+    byte[] decipher = Decrypt.decryptCBC(cipher, key);
+    Helper.printByteArray(cipher);
+    Helper.printByteArray(decipher);
   }
 }
