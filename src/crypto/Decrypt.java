@@ -31,22 +31,19 @@ public class Decrypt {
    * @return the decoded string or the original encoded message if type is not in
    *         the list above.
    */
-  public static String decrypt(String message, String key, int type) {
-    switch (type) {
-      case CAESAR:
-        return Helper.bytesToString(caesarWithFrequencies(Helper.stringToBytes(message)));
-      case VIGENERE:
-        return Helper.bytesToString(vigenereWithFrequencies(Helper.stringToBytes(message)));
-      case XOR:
-        return Helper.bytesToString(xorBruteForce(Helper.stringToBytes(message)));
-    }
-    return message;
-  }
-
   public static String breakCipher(String cipher, int type) {
-    // TODO : COMPLETE THIS METHOD
+    byte[] encoded = Helper.stringToBytes(cipher);
+    if (type == CAESAR) {
+      byte originalKey = caesarWithFrequencies(encoded);
+      return Helper.bytesToString(Encrypt.caesar(cipher, originalKey));
+    } else if (type == VIGENERE) {
+      byte[] originalKey = vigenereWithFrequencies(encoded);
+      return Helper.bytesToString(vigenereWithFrequencies(encoded));
+    } else if (type == XOR) {
+      return arrayToString(xorBruteForce(encoded));
+    }
+    return cipher;
 
-    return null; // TODO: to be modified
   }
 
   /**
@@ -56,9 +53,14 @@ public class Decrypt {
    *                         force method
    */
   public static String arrayToString(byte[][] bruteForceResult) {
-    // TODO : COMPLETE THIS METHOD
+    String result = "";
 
-    return null; // TODO: to be modified
+    for (byte[] element : bruteForceResult) {
+      result += element;
+      result += System.lineSeparator();
+    }
+
+    return result;
   }
 
   // -----------------------Caesar-------------------------

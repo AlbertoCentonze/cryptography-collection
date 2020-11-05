@@ -17,15 +17,6 @@ public class Main {
     testDecryptCBC();
   }
 
-  // TODO : TO BE COMPLETED
-  public static void TestStringEquality(String string1, String string2, String info) {
-    if (string1.equals(string2))
-      System.out.println("TEST PASSED - " + info);
-    else
-      System.out.println("TEST FAILED - " + info);
-
-  }
-
   public static void testRapidCaesar() {
     byte[] output = Encrypt.caesar(new byte[] { 105, 32, 119, 97, 110, 116 }, (byte) 50);
     for (byte b : output) {
