@@ -35,10 +35,10 @@ public class Decrypt {
     byte[] encoded = Helper.stringToBytes(cipher);
     if (type == CAESAR) {
       byte originalKey = caesarWithFrequencies(encoded);
-      return Helper.bytesToString(Encrypt.caesar(cipher, originalKey));
+      return Helper.bytesToString(Encrypt.caesar(encoded, originalKey));
     } else if (type == VIGENERE) {
       byte[] originalKey = vigenereWithFrequencies(encoded);
-      return Helper.bytesToString(vigenereWithFrequencies(encoded));
+      return "";
     } else if (type == XOR) {
       return arrayToString(xorBruteForce(encoded));
     }
