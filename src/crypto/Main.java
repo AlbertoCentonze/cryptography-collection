@@ -14,7 +14,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testDecryptCBC();
+    testCaesarFindKey();
   }
 
   public static void testRapidCaesar() {
@@ -135,9 +135,16 @@ public class Main {
   }
 
   public static void testCaesarFindKey() {
-    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("text_one.txt"));
-    float[] frequencies = Decrypt.computeFrequencies(text);
+    byte[] text = Helper.stringToBytes(Helper.cleanString(Helper.readStringFromFile("challenge-encrypted.txt")));
+    byte[] encoded = Encrypt.caesar(text, (byte) 100);
+    float[] frequencies = Decrypt.computeFrequencies(encoded);
+    int i = 0;
+    for (float f : frequencies) {
+      System.out.println(f + " " + i);
+      ++i;
+    }
     System.out.println(Decrypt.caesarFindKey(frequencies));
+    System.out.println(Helper.bytesToString(Encrypt.caesar(text, (byte) 52)));
   }
 
 }

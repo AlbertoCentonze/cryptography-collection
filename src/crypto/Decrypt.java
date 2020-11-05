@@ -110,7 +110,7 @@ public class Decrypt {
 
     for (int i = 0; i < frequencies.length; i++) {
       float coincidence = 0;
-      if (i == 32) {
+      if (i == 160) {
         continue;
       }
       for (int j = 0; j < cipherText.length; ++j) {
@@ -143,6 +143,12 @@ public class Decrypt {
       }
     }
 
+    int o = 0;
+    for (double s : scalarProducts) {
+      System.out.println(s + " " + o);
+      ++o;
+    }
+
     double maximumValue = 0.0;
     int maximumIndex = 0;
     for (int i = 0; i < scalarProducts.length; ++i) {
@@ -152,7 +158,7 @@ public class Decrypt {
       }
     }
 
-    key = (byte) maximumIndex;
+    key = (byte) (maximumIndex + 52);
 
     return key;
   }
