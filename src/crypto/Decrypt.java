@@ -228,29 +228,35 @@ public class Decrypt {
    * @return the length of the key
    */
   public static int vigenereFindKeyLength(List<Byte> cipher) {
+    ArrayList<Integer> frequences = new ArrayList<Integer>();
+    int frequenceCounter = 0;
+    for (int offset = 1; offset < cipher.size(); ++offset) {
+      for (int i = offset; i < cipher.size() - offset; ++i) {
+        int x = i - offset;
+        if (cipher.get(x) == cipher.get(i)) {
+          // System.out.println("x " + x + " " + cipher.get(x) + " i " + i + " " +
+          // cipher.get(i));
+          ++frequenceCounter;
+        }
+      }
+      frequences.add(frequenceCounter);
+      frequenceCounter = 0;
+    }
+    System.out.println(frequences);
 
-    /*
-     * ArrayList< ArrayList<Byte> > stock = new ArrayList< ArrayList<Byte> >();
-     * ArrayList<Byte> stock = new ArrayList <Byte>();
-     * 
-     * for(int i=0;i<cipher.size();i++){
-     * 
-     * ArrayList<Byte> shiftedCipher= new ArrayList<Byte>();
-     * 
-     * for(int j=i+1;j<cipher.size();j++){
-     * 
-     * shiftedCipher.add(cipher.get(j)); byte Coincidence = 0;
-     * 
-     * if(cipher.contains(shiftedCipher.get(j))) { ++Coincidence; }
-     * shiftedCipher.add(Coincidence); }
-     * 
-     * 
-     * 
-     * int key=-1;
-     * 
-     * return key;
-     */
-    return 0;
+    return -1;
+  }
+
+  /**
+   * Method that compute the coincidence of an array of byte with itself shited of
+   * a given offset for a Vigenere cipher text.
+   * 
+   * @param cipher the byte array representing the encoded text without space
+   * @return return the coincidence table
+   */
+  public static ArrayList<Integer> vignereFrequenciesCalculator(List<Byte> cipher) {
+
+
   }
 
   /**

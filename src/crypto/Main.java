@@ -1,6 +1,8 @@
 package crypto;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import crypto.Helper;
 
@@ -14,7 +16,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testCaesarFindKey();
+    testVigenereKeyLength();
   }
 
   public static void testRapidCaesar() {
@@ -145,6 +147,12 @@ public class Main {
     }
     System.out.println(Decrypt.caesarFindKey(frequencies));
     System.out.println(Helper.bytesToString(Encrypt.caesar(text, (byte) 52)));
+  }
+
+  public static void testVigenereKeyLength() {
+    List<Byte> encoded = Decrypt.removeSpaces(
+        Encrypt.vigenere(Helper.stringToBytes(Helper.readStringFromFile("long_text.txt")), new byte[] { 12, 34 }));
+    Decrypt.vigenereFindKeyLength(encoded);
   }
 
 }

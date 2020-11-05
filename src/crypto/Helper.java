@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Helper {
   private static final String SEP = File.separator;
@@ -122,6 +124,14 @@ public class Helper {
   public static void printByteArray(byte[] array) {
     for (byte element : array)
       System.out.println(element);
+  }
+
+  static List<Byte> convertBytesToList(byte[] bytes) {
+    final List<Byte> list = new ArrayList<>();
+    for (byte b : bytes) {
+      list.add(b);
+    }
+    return list;
   }
 
 }
