@@ -15,8 +15,7 @@ public class Main {
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
     // String text = Helper.readStringFromFile("long_text.txt");
-    // testComputeFrequencies(text);
-    testDecryptCBC();
+    testComputeFrequencies("abcdeaaabb");
   }
 
   // TODO : TO BE COMPLETED
@@ -127,9 +126,12 @@ public class Main {
 
     String output = "";
     for (int i = 0; i < frequencies.length; ++i) {
-      output += (char) i;
-      output += " equals ";
+      if (frequencies[i] == 0)
+        continue;
+      output += (char) (i-128);
+      output += " freq: ";
       output += frequencies[i];
+      output += " ";
     }
     Helper.writeStringToFile(output, "frequenciesOutput.txt");
   }
@@ -141,4 +143,5 @@ public class Main {
     Helper.printByteArray(cipher);
     Helper.printByteArray(decipher);
   }
+
 }

@@ -22,7 +22,7 @@ public class Decrypt {
   public static final int CAESAR = 0;
   public static final int VIGENERE = 1;
   public static final int XOR = 2;
-  
+
   /**
    * Method to break a string encoded with different types of cryptosystems
    * 
@@ -32,16 +32,17 @@ public class Decrypt {
    *         the list above.
    */
   public static String decrypt(String message, String key, int type) {
-	    switch (type) {
-	 case CAESAR:
-	        return Helper.bytesToString(caesarWithFrequencies(Helper.stringToBytes(message)));
-	 case VIGENERE:
-	        return Helper.bytesToString(vigenereWithFrequencies(Helper.stringToBytes(message)));
-	 case XOR:
-	    	return Helper.bytesToString(xorBruteForce(Helper.stringToBytes(message)));	      	    	    
-	    }
-	    return message;
+    switch (type) {
+      case CAESAR:
+        return Helper.bytesToString(caesarWithFrequencies(Helper.stringToBytes(message)));
+      case VIGENERE:
+        return Helper.bytesToString(vigenereWithFrequencies(Helper.stringToBytes(message)));
+      case XOR:
+        return Helper.bytesToString(xorBruteForce(Helper.stringToBytes(message)));
+    }
+    return message;
   }
+
   public static String breakCipher(String cipher, int type) {
     // TODO : COMPLETE THIS METHOD
 
@@ -102,23 +103,23 @@ public class Decrypt {
    * @return the character frequencies as an array of float
    */
   public static float[] computeFrequencies(byte[] cipherText) {
-    
-	float [] frequencies = new float [256];
-	
-	for(int i=0; i<frequencies.length; i++) {
-	float coincidence = 0;
-			if(i==32) {
-				continue;
-			}		
-		for (int j=0; j<cipherText.length; ++j) {
-			
-			if(cipherText[j]==(i-128)) {
-				++coincidence;
-			}
-		}
-		frequencies [i] = coincidence/256;				
-	}		  	  
-    return frequencies; 
+
+    float[] frequencies = new float[256];
+
+    for (int i = 0; i < frequencies.length; i++) {
+      float coincidence = 0;
+      if (i == 32) {
+        continue;
+      }
+      for (int j = 0; j < cipherText.length; ++j) {
+
+        if (cipherText[j] == (i - 128)) {
+          ++coincidence;
+        }
+      }
+      frequencies[i] = coincidence / 256;
+    }
+    return frequencies;
   }
 
   /**
@@ -248,23 +249,23 @@ public class Decrypt {
    * @return the clear text
    */
   public static byte[] decryptCBC(byte[] cipher, byte[] iv) {
-	  int blockLength = iv.length;
-	    byte[] decihperedText = new byte[cipher.length];
-	    byte[] key = Arrays.copyOf(iv, blockLength);
-	    int iterationsRequired = (int) Math.ceil((double) cipher.length / blockLength);
-	    int currentIteration = 0;
-	    while (currentIteration < iterationsRequired) {
-	      int startIndex = currentIteration * blockLength;
-	      int endIndex = (currentIteration + 1) * blockLength - 1;
-	      byte[] decipheredPart = Arrays.copyOfRange(cipher, startIndex, endIndex);
-	      decipheredPart = Encrypt.oneTimePad(decipheredPart, key);
-	      key = Arrays.copyOfRange(cipher, startIndex, endIndex);
-	      for (int i = startIndex; i <= endIndex; ++i) {
-	        decihperedText[i] = decipheredPart[i % blockLength];
-	      }
-	    }
+    int blockLength = iv.length;
+    byte[] decihperedText = new byte[cipher.length];
+    byte[] key = Arrays.copyOf(iv, blockLength);
+    int iterationsRequired = (int) Math.ceil((double) cipher.length / blockLength);
+    int currentIteration = 0;
+    while (currentIteration < iterationsRequired) {
+      int startIndex = currentIteration * blockLength;
+      int endIndex = (currentIteration + 1) * blockLength - 1;
+      byte[] decipheredPart = Arrays.copyOfRange(cipher, startIndex, endIndex);
+      decipheredPart = Encrypt.oneTimePad(decipheredPart, key);
+      key = Arrays.copyOfRange(cipher, startIndex, endIndex);
+      for (int i = startIndex; i <= endIndex; ++i) {
+        decihperedText[i] = decipheredPart[i % blockLength];
+      }
+    }
 
-	    return decihperedText;
-	  }
+    return decihperedText;
+  }
 
 }
