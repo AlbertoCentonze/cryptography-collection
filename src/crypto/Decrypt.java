@@ -228,7 +228,10 @@ public class Decrypt {
    * @return the length of the key
    */
   public static int vigenereFindKeyLength(List<Byte> cipher) {
-    ArrayList<Integer> frequences = new ArrayList<Integer>();
+
+    // STEP 1
+
+    ArrayList<Integer> coincidences = new ArrayList<Integer>();
     int frequenceCounter = 0;
     for (int offset = 1; offset < cipher.size(); ++offset) {
       for (int i = offset; i < cipher.size() - offset; ++i) {
@@ -239,10 +242,66 @@ public class Decrypt {
           ++frequenceCounter;
         }
       }
-      frequences.add(frequenceCounter);
+      coincidences.add(frequenceCounter);
       frequenceCounter = 0;
     }
-    System.out.println(frequences);
+    System.out.println(coincidences);
+
+    // STEP 2
+
+    ArrayList<Integer> localMaximums = new ArrayList<Integer>();
+    for (int i = 0; i < Math.ceil(coincidences.size() / 2); ++i) {
+      int minimumCounter = 0;
+      if (i == 0) {
+        for (int c = 0; c <= 2; ++c) {
+          if (coincidences.get(i + c) <= coincidences.get(i)) {
+            ++minimumCounter;
+          }
+        }
+        if (minimumCounter >= 3) {
+          localMaximums.add(i);
+        }
+      } else if (i == 1) {
+        for (int c = -1; c <= 2; ++c) {
+          if (coincidences.get(i + c) <= coincidences.get(i)) {
+            ++minimumCounter;
+          }
+        }
+        if (minimumCounter >= 4) {
+          localMaximums.add(i);
+        }
+      } else if (i == coincidences.size() - 1) {
+        for (int c = -2; c <= 0; ++c) {
+          if (coincidences.get(i + c) <= coincidences.get(i)) {
+            ++minimumCounter;
+          }
+        }
+        if (minimumCounter >= 3) {
+          localMaximums.add(i);
+        }
+      } else if (i == coincidences.size() - 2) {
+        for (int c = -2; c <= 1; ++c) {
+          if (coincidences.get(i + c) <= coincidences.get(i)) {
+            ++minimumCounter;
+          }
+        }
+        if (minimumCounter >= 4) {
+          localMaximums.add(i);
+        }
+      } else {
+        for (int c = -2; c <= 2; ++c) {
+          if (coincidences.get(i + c) <= coincidences.get(i)) {
+            ++minimumCounter;
+          }
+        }
+        if (minimumCounter >= 5) {
+          localMaximums.add(i);
+          // TODO fix that
+        }
+      }
+    }
+
+    System.out.println(localMaximums);
 
     return -1;
   }
@@ -254,10 +313,10 @@ public class Decrypt {
    * @param cipher the byte array representing the encoded text without space
    * @return return the coincidence table
    */
-  public static ArrayList<Integer> vignereFrequenciesCalculator(List<Byte> cipher) {
-
-
-  }
+  // public static ArrayList<Integer> vignereFrequenciesCalculator(List<Byte>
+  // cipher) {
+  // TODO
+  // }
 
   /**
    * Takes the cipher without space, and the key length, and uses the dot product

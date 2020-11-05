@@ -150,8 +150,9 @@ public class Main {
   }
 
   public static void testVigenereKeyLength() {
-    List<Byte> encoded = Decrypt.removeSpaces(
-        Encrypt.vigenere(Helper.stringToBytes(Helper.readStringFromFile("long_text.txt")), new byte[] { 12, 34 }));
+    List<Byte> encoded = Decrypt
+        .removeSpaces(Encrypt.vigenere(Helper.stringToBytes(Helper.readStringFromFile("long_text.txt")),
+            new byte[] { 12, 34, 78, -10, 1, 3, 5, 6, 7, 100 }));
     Decrypt.vigenereFindKeyLength(encoded);
   }
 
