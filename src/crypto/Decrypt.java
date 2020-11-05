@@ -130,8 +130,29 @@ public class Decrypt {
    * @return the key
    */
   public static byte caesarFindKey(float[] charFrequencies) {
-    // TODO : COMPLETE THIS METHOD
-    return -1; // TODO: to be modified
+    byte key;
+
+    double[] scalarProducts = new double[256];
+    for (int offset = 0; offset < ALPHABETSIZE; ++offset) {
+      for (int i = 0 + offset; i < 26 + offset; ++i) {
+        int x = i % 256;
+        int j = i - offset;
+        scalarProducts[offset] = charFrequencies[x] * ENGLISHFREQUENCIES[j];
+      }
+    }
+
+    double maximumValue = 0.0;
+    int maximumIndex = 0;
+    for (int i = 0; i < scalarProducts.length; ++i) {
+      if (maximumValue < scalarProducts[i]) {
+        maximumIndex = i;
+        maximumValue = scalarProducts[i];
+      }
+    }
+
+    key = (byte) maximumIndex;
+
+    return key;
   }
 
   // -----------------------XOR-------------------------
@@ -156,7 +177,6 @@ public class Decrypt {
     }
     return result;
 
-    // return null; // TODO: to be modified
   }
 
   // -----------------------Vigenere-------------------------
@@ -256,13 +276,14 @@ public class Decrypt {
     int currentIteration = 0;
     while (currentIteration < iterationsRequired) {
       int startIndex = currentIteration * blockLength;
-      int endIndex = (currentIteration + 1) * blockLength - 1;
+      int endIndex = (currentIteration + 1) * blockLength;
       byte[] decipheredPart = Arrays.copyOfRange(cipher, startIndex, endIndex);
       decipheredPart = Encrypt.oneTimePad(decipheredPart, key);
       key = Arrays.copyOfRange(cipher, startIndex, endIndex);
-      for (int i = startIndex; i <= endIndex; ++i) {
+      for (int i = startIndex; i < decihperedText.length; ++i) {
         decihperedText[i] = decipheredPart[i % blockLength];
       }
+      ++currentIteration;
     }
 
     return decihperedText;

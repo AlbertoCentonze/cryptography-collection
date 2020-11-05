@@ -14,8 +14,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    // String text = Helper.readStringFromFile("long_text.txt");
-    testComputeFrequencies("abcdeaaabb");
+    testDecryptCBC();
   }
 
   // TODO : TO BE COMPLETED
@@ -128,7 +127,7 @@ public class Main {
     for (int i = 0; i < frequencies.length; ++i) {
       if (frequencies[i] == 0)
         continue;
-      output += (char) (i-128);
+      output += (char) (i - 128);
       output += " freq: ";
       output += frequencies[i];
       output += " ";
@@ -142,6 +141,12 @@ public class Main {
     byte[] decipher = Decrypt.decryptCBC(cipher, key);
     Helper.printByteArray(cipher);
     Helper.printByteArray(decipher);
+  }
+
+  public static void testCaesarFindKey() {
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("text_one.txt"));
+    float[] frequencies = Decrypt.computeFrequencies(text);
+    System.out.println(Decrypt.caesarFindKey(frequencies));
   }
 
 }
