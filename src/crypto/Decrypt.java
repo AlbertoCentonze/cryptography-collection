@@ -105,6 +105,7 @@ public class Decrypt {
    * @return the character frequencies as an array of float
    */
   public static float[] computeFrequencies(byte[] cipherText) {
+    System.out.println(Helper.bytesToString(cipherText));
 
     float[] frequencies = new float[256];
 
@@ -119,7 +120,7 @@ public class Decrypt {
           ++coincidence;
         }
       }
-      frequencies[i] = coincidence / 256;
+      frequencies[i] = coincidence / cipherText.length;
     }
     return frequencies;
   }
@@ -136,7 +137,7 @@ public class Decrypt {
 
     double[] scalarProducts = new double[256];
     for (int offset = 0; offset < ALPHABETSIZE; ++offset) {
-      for (int i = 0 + offset; i < 26 + offset; ++i) {
+      for (int i = offset; i < ENGLISHFREQUENCIES.length + offset; ++i) {
         int x = i % 256;
         int j = i - offset;
         scalarProducts[offset] = charFrequencies[x] * ENGLISHFREQUENCIES[j];
@@ -158,7 +159,7 @@ public class Decrypt {
       }
     }
 
-    key = (byte) (maximumIndex + 52);
+    key = (byte) (APOSITION - maximumIndex);
 
     return key;
   }
