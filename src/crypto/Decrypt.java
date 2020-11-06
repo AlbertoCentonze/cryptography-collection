@@ -92,8 +92,6 @@ public class Decrypt {
    * @return the encoding key
    */
   public static byte caesarWithFrequencies(byte[] cipherText) {
-    // TODO : COMPLETE THIS METHOD
-
     return -1; // TODO: to be modified
   }
 
@@ -302,9 +300,29 @@ public class Decrypt {
       }
     }
 
-    System.out.println(localMaximums);
+    // STEP 3
 
-    return -1;
+    Map<Integer, Integer> frequencies = new HashMap<Integer, Integer>();
+    for (int i = 1; i < localMaximums.size(); ++i) {
+      int size = localMaximums.get(i) - localMaximums.get(i - 1);
+      if (frequencies.get(size) == null) {
+        frequencies.put(size, 1);
+      } else {
+        frequencies.replace(size, frequencies.get(size) + 1);
+      }
+    }
+    int mostFrequentSize = 0;
+    int mostFrequentSizeFrequence = 0;
+    for (Integer key : frequencies.keySet()) {
+      Integer frequence = frequencies.get(key);
+      if (mostFrequentSizeFrequence < frequence) {
+        mostFrequentSize = key;
+        mostFrequentSizeFrequence = frequence;
+      }
+    }
+
+    return mostFrequentSize;
+
   }
 
   /**
