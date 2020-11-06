@@ -16,7 +16,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testVigenereKeyLength();
+    testVigenereKeyFinder();
   }
 
   public static void testRapidCaesar() {
@@ -155,4 +155,9 @@ public class Main {
     System.out.println(Decrypt.vigenereFindKeyLength(encoded));
   }
 
+  public static void testVigenereKeyFinder() {
+    byte[] cipher = Encrypt.vigenere(Helper.stringToBytes(Helper.readStringFromFile("long_text.txt")),
+        new byte[] { 12, 34, 63, 56, 98, 4, 94, -45, 36 });
+    Decrypt.vigenereWithFrequencies(cipher);
+  }
 }

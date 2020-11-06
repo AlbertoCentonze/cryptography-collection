@@ -92,7 +92,8 @@ public class Decrypt {
    * @return the encoding key
    */
   public static byte caesarWithFrequencies(byte[] cipherText) {
-    return -1; // TODO: to be modified
+    float[] frequencies = computeFrequencies(cipherText);
+    return caesarFindKey(frequencies);
   }
 
   /**
@@ -196,8 +197,13 @@ public class Decrypt {
    * @return the byte encoding of the clear text
    */
   public static byte[] vigenereWithFrequencies(byte[] cipher) {
-    // TODO : COMPLETE THIS METHOD
-    return null; // TODO: to be modified
+    List<Byte> cipherWithoutSpaces = removeSpaces(cipher);
+    int keyLength = vigenereFindKeyLength(cipherWithoutSpaces);
+    System.out.println("The length of the key is: " + keyLength);
+    byte[] key = vigenereFindKey(cipherWithoutSpaces, keyLength);
+    System.out.println("The key is: " + Helper.byteArrayToString(key));
+
+    return null;
   }
 
   /**
@@ -332,10 +338,6 @@ public class Decrypt {
    * @param cipher the byte array representing the encoded text without space
    * @return return the coincidence table
    */
-  // public static ArrayList<Integer> vignereFrequenciesCalculator(List<Byte>
-  // cipher) {
-  // TODO
-  // }
 
   /**
    * Takes the cipher without space, and the key length, and uses the dot product
@@ -347,8 +349,27 @@ public class Decrypt {
    * @return the inverse key to decode the Vigenere cipher text
    */
   public static byte[] vigenereFindKey(List<Byte> cipher, int keyLength) {
-    // TODO : COMPLETE THIS METHOD
-    return null; // TODO: to be modified
+    byte[] key = new byte[keyLength];
+    ArrayList<ArrayList<Byte>> subCiphers = new ArrayList<ArrayList<Byte>>();
+    for (int i = 0; i < keyLength; ++i) {
+      subCiphers.add(new ArrayList<Byte>());
+    }
+
+    for (int i = 0; i < cipher.size(); ++i) {
+      int j = i % keyLength;
+      subCiphers.get(j).add(cipher.get(i));
+    }
+
+    for (int i = 0; i < subCiphers.size(); ++i) {
+      Byte[] classArray = subCiphers.get(i).toArray(new Byte[subCiphers.get(i).size()]);
+      byte[] primitiveArray = new byte[classArray.length];
+      for (int c = 0; c < classArray.length; ++c) {
+        primitiveArray[c] = classArray[c]; // not-so-autoboxing
+      }
+      key[i] = Decrypt.caesarWithFrequencies(primitiveArray);
+    }
+
+    return key;
   }
 
   // -----------------------Basic CBC-------------------------
