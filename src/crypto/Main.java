@@ -1,10 +1,7 @@
 package crypto;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import crypto.Helper;
 
 /*
  * Part 1: Encode (with note that one can reuse the functions to decode)
@@ -157,7 +154,7 @@ public class Main {
 
   public static void testVigenereKeyFinder() {
     byte[] cipher = Encrypt.vigenere(Helper.stringToBytes(Helper.readStringFromFile("long_text.txt")),
-        new byte[] { 12, 34, 63, 56, 98, 4, 94, -45, 36 });
+        new byte[] { 12, 34, 63, 89 });
     Decrypt.vigenereWithFrequencies(cipher);
   }
 }
