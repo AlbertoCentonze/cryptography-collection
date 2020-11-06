@@ -137,9 +137,9 @@ public class Main {
   }
 
   public static void testCaesarFindKey() {
-    byte[] text = Helper.stringToBytes(Helper.cleanString(Helper.readStringFromFile("challenge-encrypted.txt")));
-    // byte[] encoded = Encrypt.caesar(text, (byte) 100);
-    float[] frequencies = Decrypt.computeFrequencies(text);
+    byte[] text = Helper.stringToBytes(Helper.cleanString(Helper.readStringFromFile("text_one.txt")));
+    byte[] encoded = Encrypt.caesar(text, (byte) -12);
+    float[] frequencies = Decrypt.computeFrequencies(encoded);
     int i = 0;
     for (float f : frequencies) {
       System.out.println(f + " " + i);

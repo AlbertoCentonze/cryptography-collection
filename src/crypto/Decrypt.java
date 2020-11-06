@@ -159,7 +159,7 @@ public class Decrypt {
       }
     }
 
-    key = (byte) (APOSITION - maximumIndex);
+    key = (byte) (maximumIndex - 204);
 
     return key;
   }
