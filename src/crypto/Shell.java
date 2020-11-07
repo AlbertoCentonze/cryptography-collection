@@ -1,3 +1,5 @@
+
+
 package crypto;
 
 public class Shell {
@@ -13,10 +15,35 @@ public class Shell {
 
     String s1 = "code";
     String s2 = "decode";
+    String s3 = "Help";
     int i = 0;
 
-    // Si l'on code
-    if (answer.equals(s1)) {
+    
+    if(answer.equals(s3)) {
+    	System.out.println(" At the start of the program we will let you choose whether you want to encode a message or decode a message. Then we will ask you to write this message (in letters). You will be able to choose between several different techniques.\r\n"
+    			+ "\r\n"
+    			+ "If you code:\r\n"
+    			+ "- Caesar\r\n"
+    			+ "- Vigenere\r\n"
+    			+ "- Xor\r\n"
+    			+ "- One-Time Pad (OTP)\r\n"
+    			+ "- Cipher Block Chaining (CBC)\r\n"
+    			+ "\r\n"
+    			+ "If you decode:\r\n"
+    			+ "- Caesar Brute Force\r\n"
+    			+ "- Xor\r\n"
+    			+ "- CBC\r\n"
+    			+ "- Clever deciphering of the Caesar\r\n"
+    			+ "- Deciphering by Vigenère\r\n"
+    			+ "\r\n"
+    			+ "Dans la partie codage, vous pourrez pour certaine technique de chiffrement, choisir si oui ou non 0vous voulez coder les espaces présent dans votre message.\r\n"
+    			+ "In the case of message encoding, you will have to give the key, the size of which varies depending on the selected encryption technique.\r\n"
+    			+ "For the decryption of the CBC, it will be required to enter the first pad used to encode the message.\r\n"
+    			+ "The result will then be displayed. ");
+    }
+    
+    // Si l'on code   
+    else if (answer.equals(s1)) {
 
       // Savoir avec quelle methode, demande tant que la méthode est incorrecte
       String methode = methodeCode();
@@ -29,20 +56,36 @@ public class Shell {
 
       // Avec CAESAR
       if (methode.equals(m1)) {
-
-        int key = keylengthOf1();
+    	  int key = keylengthOf1();
+    	  	boolean  spaces = WithOrWithoutSpace();
+    	  	if(spaces) {
+    		  
+    	  	}else {
+    		  
+    	  	}      
       }
       // Avec VIGENERE
       else if (methode.equals(m2)) {
 
         int keySize = keySize();
-
-        int tab[] = keyTab(keySize);
+        int tab[] = keyTab(keySize);       
+        	boolean  spaces = WithOrWithoutSpace();
+        	if(spaces) {
+  		  
+        	}else {
+  		  
+        	}      
       }
       // AvecXOR
       else if (methode.equals(m3)) {
 
-        int key = keylengthOf1();
+        int key = keylengthOf1();        
+        	boolean  spaces = WithOrWithoutSpace();
+        	if(spaces) {
+  		  
+  	  		}else {
+  		  
+  	  		}      
       }
       // Avec ONETIME
       else if (methode.equals(m4)) {
@@ -102,11 +145,13 @@ public class Shell {
     String answer = "";
     String s1 = "code";
     String s2 = "decode";
+    String s3 = "Help";
     int i = 0;
     do {
-      System.out.println("Do you want to code a message or to decode a message ? (Write code or decode) : ");
+      System.out.println("If you need help understanding how the shell works (Write help) \\r\\n\""
+      		+ " Do you want to code a message or to decode a message ? (Write code or decode) : ");
       answer += scanner.nextLine();
-      if (answer.equals(s1) || answer.equals(s2)) {
+      if (answer.equals(s1) || answer.equals(s2) || answer.equals(s3)) {
         ++i;
       }
     } while (i == 0);
@@ -209,5 +254,24 @@ public class Shell {
     }
 
     return tabKey;
+  }
+  
+  public static boolean WithOrWithoutSpace() {
+	  boolean spaces;
+	  int i =0;
+	    do {
+	      System.out.println("Do you want to skip spaces or not ? ( Write yes or not) ");
+	      String message = scanner.nextLine();
+	      String s1 = "yes";
+	      String s2 = "not";
+	      if(message.equals(s1)) {
+	    	  return true;	 
+	    	  ++i;
+	      } else if(message.equals(s1)) {	    	
+	    	  return false;
+	    	  ++i;
+	      }
+	      }while (i>0);
+	  
   }
 }
