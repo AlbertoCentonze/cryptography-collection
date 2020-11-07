@@ -13,7 +13,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testVigenereKeyFinder();
+    testCaesarWithFrequencies();
   }
 
   public static void testRapidCaesar() {
@@ -135,7 +135,7 @@ public class Main {
 
   public static void testCaesarFindKey() {
     byte[] text = Helper.stringToBytes(Helper.cleanString(Helper.readStringFromFile("text_one.txt")));
-    byte[] encoded = Encrypt.caesar(text, (byte) -12);
+    byte[] encoded = Encrypt.caesar(text, (byte) -67);
     float[] frequencies = Decrypt.computeFrequencies(encoded);
     int i = 0;
     for (float f : frequencies) {
@@ -146,15 +146,41 @@ public class Main {
   }
 
   public static void testVigenereKeyLength() {
-    List<Byte> encoded = Decrypt
-        .removeSpaces(Encrypt.vigenere(Helper.stringToBytes(Helper.readStringFromFile("long_text.txt")),
-            new byte[] { 12, 34, 63, 56, 98, 4, 94, -45, 36 }));
+    List<Byte> encoded = Decrypt.removeSpaces(
+        Encrypt.vigenere(Helper.stringToBytes(Helper.readStringFromFile("long_text.txt")), new byte[] { 12, 34, 63 }));
     System.out.println(Decrypt.vigenereFindKeyLength(encoded));
   }
 
   public static void testVigenereKeyFinder() {
-    byte[] cipher = Encrypt.vigenere(Helper.stringToBytes(Helper.readStringFromFile("long_text.txt")),
-        new byte[] { 12, 34, 63, 89 });
+    byte[] cipher = Encrypt.vigenere(Helper.stringToBytes(Helper.readStringFromFile("text_one.txt")),
+        new byte[] { 12, -34, 125, 89 });
     Decrypt.vigenereWithFrequencies(cipher);
+  }
+
+  public static void testCaesarWithFrequencies() {
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("long_text.txt"));
+    for (Integer key = -128; key < 128; ++key) {
+      byte[] encoded = Encrypt.caesar(text, key.byteValue());
+      byte resultKey = Decrypt.caesarWithFrequencies(encoded);
+      if (resultKey != key)
+        System.out.println("TEST FAILED at key " + key);
+    }
+  }
+
+  public static void testCaesarAllCombination() {
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("text_one.txt"));
+    byte[] decoded = new byte[text.length];
+    for (Integer key = -128; key < 128; ++key) {
+      byte[] encoded = Encrypt.caesar(text, key.byteValue());
+      decoded = Encrypt.caesar(encoded, (byte) -key.byteValue());
+    }
+
+    for (int i = 0; i < text.length; ++i) {
+      byte a = text[i];
+      byte b = decoded[i];
+      if (a != b) {
+        System.out.println(i);
+      }
+    }
   }
 }

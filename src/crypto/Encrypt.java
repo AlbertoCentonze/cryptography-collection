@@ -61,7 +61,8 @@ public class Encrypt {
    * @return an encoded byte array
    */
   public static byte[] caesar(byte[] plainText, byte key, boolean spaceEncoding) {
-    assert (plainText != null);
+    assert plainText != null;
+    assert plainText.length != 0;
 
     // Création tableau qui va changer les byte
     byte cipher[] = new byte[plainText.length];

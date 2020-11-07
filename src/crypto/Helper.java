@@ -128,8 +128,10 @@ public class Helper {
 
   public static String byteArrayToString(byte[] array) {
     String output = "";
-    for (byte element : array)
+    for (byte element : array) {
       output += element;
+      output += " ";
+    }
 
     return output;
   }

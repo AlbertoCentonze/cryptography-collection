@@ -103,22 +103,31 @@ public class Decrypt {
    * @return the character frequencies as an array of float
    */
   public static float[] computeFrequencies(byte[] cipherText) {
-    System.out.println(Helper.bytesToString(cipherText));
-
     float[] frequencies = new float[256];
+    int notSpacesCounter = 0;
+    for (int i = 0; i < cipherText.length; i++) {
+      if (cipherText[i] != 32) {
+        notSpacesCounter++;
+      }
+    }
+    for (int letter = 0; letter < 256; letter++) {
+      int letterOccurencies = 0;
 
-    for (int i = 0; i < frequencies.length; i++) {
-      float coincidence = 0;
-      if (i == 160) {
+      if (letter == 32)
         continue;
-      }
-      for (int j = 0; j < cipherText.length; ++j) {
 
-        if (cipherText[j] == (i - 128)) {
-          ++coincidence;
-        }
+      for (int i = 0; i < cipherText.length; i++) {
+        if ((letter > 127 && (letter - 256) == cipherText[i]) || letter == cipherText[i])
+          letterOccurencies++;
+
+        frequencies[letter] = (float) letterOccurencies / notSpacesCounter;
       }
-      frequencies[i] = coincidence / cipherText.length;
+    }
+
+    for (
+
+        int x = 0; x < frequencies.length; ++x) {
+      System.out.println(x + ": " + frequencies[x]);
     }
     return frequencies;
   }
@@ -132,33 +141,30 @@ public class Decrypt {
    */
   public static byte caesarFindKey(float[] charFrequencies) {
     byte key;
-
     double[] scalarProducts = new double[256];
-    for (int offset = 0; offset < ALPHABETSIZE; ++offset) {
-      for (int i = offset; i < ENGLISHFREQUENCIES.length + offset; ++i) {
-        int x = i % 256;
-        int j = i - offset;
-        scalarProducts[offset] = charFrequencies[x] * ENGLISHFREQUENCIES[j];
-      }
-    }
+    int offset = 0;
 
-    int o = 0;
-    for (double s : scalarProducts) {
-      System.out.println(s + " " + o);
-      ++o;
+    for (int i = 0; i < ALPHABETSIZE; i++) {
+      for (int j = 0; j < ENGLISHFREQUENCIES.length; j++) {
+        int bound = offset % 26;
+        if (i + bound < 256) {
+          scalarProducts[i] += ENGLISHFREQUENCIES[j] * charFrequencies[i + bound];
+        } else {
+          scalarProducts[i] += ENGLISHFREQUENCIES[j] * charFrequencies[i - 256 + bound];
+        }
+        ++offset;
+      }
     }
 
     double maximumValue = 0.0;
     int maximumIndex = 0;
-    for (int i = 0; i < scalarProducts.length; ++i) {
+    for (int i = 0; i < 256; i++) {
       if (maximumValue < scalarProducts[i]) {
-        maximumIndex = i;
         maximumValue = scalarProducts[i];
+        maximumIndex = i;
       }
     }
-
-    key = (byte) (maximumIndex - 204);
-
+    key = (byte) (maximumIndex - 97);
     return key;
   }
 
