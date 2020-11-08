@@ -136,12 +136,20 @@ public class Helper {
     return output;
   }
 
-  static List<Byte> convertBytesToList(byte[] bytes) {
+  public static List<Byte> convertBytesToList(byte[] bytes) {
     final List<Byte> list = new ArrayList<>();
     for (byte b : bytes) {
       list.add(b);
     }
     return list;
+  }
+
+  public static byte[] keyInverterVigenere(byte[] key) {
+    byte[] inverseKey = new byte[key.length];
+    for (int i = 0; i < key.length; ++i) {
+      inverseKey[i] = (byte) -key[i];
+    }
+    return inverseKey;
   }
 
 }

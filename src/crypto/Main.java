@@ -14,7 +14,14 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testVigenereWithFrequencies();
+    testCaesarWithFrequencies();
+  }
+
+  public static void testBruteForce() {
+    Helper.writeStringToFile(
+        Decrypt.arrayToString(Decrypt
+            .xorBruteForce(Encrypt.xor(Helper.stringToBytes(Helper.readStringFromFile("text_one.txt")), (byte) -120))),
+        "bruteForceCaesar.txt");
   }
 
   public static void testRapidCaesar() {
@@ -169,7 +176,7 @@ public class Main {
   }
 
   public static void testVigenereWithFrequencies() {
-    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("long_text.txt"));
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("text_one.txt"));
     int i = 0;
     while (i < 100) {
       byte[] key = Encrypt.generatePad(4);
@@ -195,6 +202,89 @@ public class Main {
       if (a != b) {
         System.out.println(i);
       }
+    }
+  }
+
+  public static void testXorAllCombinations() {
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("text_one.txt"));
+    byte[] decoded = new byte[text.length];
+    for (Integer key = -128; key < 128; ++key) {
+      byte[] encoded = Encrypt.xor(text, key.byteValue());
+      decoded = Encrypt.xor(encoded, key.byteValue());
+    }
+
+    for (int i = 0; i < text.length; ++i) {
+      byte a = text[i];
+      byte b = decoded[i];
+      if (a != b) {
+        System.out.println(i);
+      }
+    }
+  }
+
+  public static void testVigenereAllCombinations() {
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("long_text.txt"));
+    int i = 0;
+    int size = 1;
+    while (i < 1000) {
+      if (i > size * 10) {
+        ++size;
+      }
+      byte[] key = Encrypt.generatePad(size);
+      byte[] encoded = Encrypt.vigenere(text, key, true);
+      byte[] decoded = Encrypt.vigenere(encoded, Helper.keyInverterVigenere(key), true);
+      for (int c = 0; c < text.length; ++c) {
+        byte a = text[c];
+        byte b = decoded[c];
+        if (a != b) {
+          System.out.println(c);
+        }
+      }
+      ++i;
+    }
+  }
+
+  public static void testOtpAllCombinations() {
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("long_text.txt"));
+    int i = 0;
+    int size = 1;
+    while (i < 1000) {
+      if (i > size * 10) {
+        ++size;
+      }
+      byte[] key = Encrypt.generatePad(size);
+      byte[] encoded = Encrypt.oneTimePad(text, key);
+      byte[] decoded = Encrypt.oneTimePad(encoded, key);
+      for (int c = 0; c < text.length; ++c) {
+        byte a = text[c];
+        byte b = decoded[c];
+        if (a != b) {
+          System.out.println(c);
+        }
+      }
+      ++i;
+    }
+  }
+
+  public static void testCBCAllCombinations() {
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("long_text.txt"));
+    int i = 0;
+    int size = 1;
+    while (i < 1000) {
+      if (i > size * 10) {
+        ++size;
+      }
+      byte[] key = Encrypt.generatePad(size);
+      byte[] encoded = Encrypt.cbc(text, key);
+      byte[] decoded = Decrypt.decryptCBC(encoded, key);
+      for (int c = 0; c < text.length; ++c) {
+        byte a = text[c];
+        byte b = decoded[c];
+        if (a != b) {
+          System.out.println(c);
+        }
+      }
+      ++i;
     }
   }
 

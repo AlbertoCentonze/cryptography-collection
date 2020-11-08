@@ -34,7 +34,6 @@ public class Encrypt {
    */
   public static String encrypt(String message, String key, int type) {
     switch (type) {
-      // TODO check if it's correct
       case CAESAR:
         return Helper.bytesToString(caesar(Helper.stringToBytes(message), Helper.stringToBytes(key)[0]));
       case VIGENERE:
@@ -42,7 +41,11 @@ public class Encrypt {
       case XOR:
         return Helper.bytesToString(xor(Helper.stringToBytes(message), Helper.stringToBytes(key)[0]));
       case ONETIME:
-        return Helper.bytesToString(oneTimePad(Helper.stringToBytes(message), Helper.stringToBytes(key)));
+        byte[] encoded = oneTimePad(Helper.stringToBytes(message), Helper.stringToBytes(key));
+        if (encoded == null)
+          return "";
+        else
+          return Helper.byteArrayToString(encoded);
       case CBC:
         return Helper.bytesToString(cbc(Helper.stringToBytes(message), Helper.stringToBytes(key)));
     }
@@ -216,7 +219,7 @@ public class Encrypt {
     byte[] cipherText = Arrays.copyOf(plainText, plainText.length);
 
     for (int i = 0; i < cipherText.length; i++) {
-      cipherText[i] = (byte) (plainText[i] ^ pad[i]);
+      cipherText[i] = (byte) (plainText[i] ^ pad[i % pad.length]);
     }
 
     return cipherText;

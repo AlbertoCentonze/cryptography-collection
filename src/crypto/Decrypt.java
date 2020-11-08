@@ -55,7 +55,7 @@ public class Decrypt {
     String result = "";
 
     for (byte[] element : bruteForceResult) {
-      result += element;
+      result += Helper.bytesToString(element);
       result += System.lineSeparator();
     }
 
@@ -127,7 +127,6 @@ public class Decrypt {
     for (
 
         int x = 0; x < frequencies.length; ++x) {
-      System.out.println(x + ": " + frequencies[x]);
     }
     return frequencies;
   }
@@ -146,11 +145,11 @@ public class Decrypt {
 
     for (int i = 0; i < ALPHABETSIZE; i++) {
       for (int j = 0; j < ENGLISHFREQUENCIES.length; j++) {
-        int bound = offset % 26;
-        if (i + bound < 256) {
+        int bound = offset % ENGLISHFREQUENCIES.length;
+        if (i + bound < ALPHABETSIZE) {
           scalarProducts[i] += ENGLISHFREQUENCIES[j] * charFrequencies[i + bound];
         } else {
-          scalarProducts[i] += ENGLISHFREQUENCIES[j] * charFrequencies[i - 256 + bound];
+          scalarProducts[i] += ENGLISHFREQUENCIES[j] * charFrequencies[i - ALPHABETSIZE + bound];
         }
         ++offset;
       }
@@ -352,27 +351,30 @@ public class Decrypt {
    * @return the inverse key to decode the Vigenere cipher text
    */
   public static byte[] vigenereFindKey(List<Byte> cipher, int keyLength) {
+    // @SuppressWarnings("unchecked")
+    ArrayList<Byte>[] subsequences = new ArrayList[keyLength];
     byte[] key = new byte[keyLength];
-    ArrayList<ArrayList<Byte>> subCiphers = new ArrayList<ArrayList<Byte>>();
+
     for (int i = 0; i < keyLength; ++i) {
-      subCiphers.add(new ArrayList<Byte>());
+      ArrayList<Byte> newSubsequence = new ArrayList<Byte>();
+      for (int j = 0; j < cipher.size(); ++j) {
+        int modulo = j % keyLength;
+        if (modulo == i)
+          newSubsequence.add(cipher.get(j));
+        subsequences[i] = (newSubsequence);
+      }
     }
 
-    for (int i = 0; i < cipher.size(); ++i) {
-      int j = i % keyLength;
-      subCiphers.get(j).add(cipher.get(i));
-    }
-
-    for (int i = 0; i < subCiphers.size(); ++i) {
-      Byte[] classArray = subCiphers.get(i).toArray(new Byte[subCiphers.get(i).size()]);
-      byte[] primitiveArray = new byte[classArray.length];
-      for (int c = 0; c < classArray.length; ++c) {
-        primitiveArray[c] = classArray[c]; // not-so-autoboxing
+    for (int i = 0; i < keyLength; ++i) {
+      byte[] primitiveArray = new byte[subsequences[i].size()];
+      for (int j = 0; j < subsequences[i].size(); ++j) {
+        primitiveArray[j] = subsequences[i].get(j);
       }
       key[i] = Decrypt.caesarWithFrequencies(primitiveArray);
     }
 
     return key;
+
   }
 
   // -----------------------Basic CBC-------------------------
