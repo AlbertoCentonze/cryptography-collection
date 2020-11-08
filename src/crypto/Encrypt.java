@@ -1,6 +1,5 @@
 package crypto;
 
-import java.util.Scanner;
 import java.util.Random;
 import java.util.Arrays;
 
@@ -67,22 +66,23 @@ public class Encrypt {
     assert plainText != null;
     assert plainText.length != 0;
 
-    // Création tableau qui va changer les byte
+    // new array to store the result
     byte cipher[] = new byte[plainText.length];
 
-    // Remplissage du tableau
+    // for cycle that adds the key to the original byte
     for (int i = 0; i < plainText.length; i++) {
 
-      if (spaceEncoding) // si l'on code l'espace " "
+      if (spaceEncoding) // version with space encoding
         cipher[i] = (byte) (plainText[i] + key);
 
-      else { // si l'on ne code pas les epaces
+      else { // version without space encoding
         switch (plainText[i]) {
           case SPACE:
             cipher[i] = SPACE;
             break;
           default:
             cipher[i] = (byte) (plainText[i] + key);
+            break;
         }
       }
     }
@@ -115,13 +115,18 @@ public class Encrypt {
    */
 
   public static byte[] xor(byte[] plainText, byte key, boolean spaceEncoding) {
+    // array that will store the result, deep copy of the argument plain text
+    assert plainText != null;
+    assert plainText.length != 0;
+
     byte[] cipherText = Arrays.copyOf(plainText, plainText.length);
 
+    // cycle that apply xor with the bitwise operator to every byte in cipherText
     for (int i = 0; i < cipherText.length; i++) {
-      if (spaceEncoding) {
+      if (spaceEncoding) { // with space encoding
         cipherText[i] = (byte) (plainText[i] ^ key);
       } else {
-        switch (plainText[i]) {
+        switch (plainText[i]) { // without space encoding
           case SPACE:
             cipherText[i] = SPACE;
             break;
@@ -160,28 +165,28 @@ public class Encrypt {
    */
   public static byte[] vigenere(byte[] plainText, byte[] keyword, boolean spaceEncoding) {
     assert (plainText != null);
+    assert (plainText.length != 0);
+    assert (keyword != null);
+    assert (keyword.length != 0);
 
-    // Création tableau qui va changer les byte
+    // empty array to store the result
     byte cipherText[] = new byte[plainText.length];
 
-    // Remplissage du tableau
-    if (spaceEncoding) { // si l'on code l'espace " "
+    if (spaceEncoding) { // with space encoding
       for (int i = 0; i < plainText.length; i++) {
-        int keywordPointer = i % keyword.length;
-
-        cipherText[i] = (byte) (plainText[i] + keyword[keywordPointer]);
+        int keywordPointer = i % keyword.length; // tells which part of the key to use
+        cipherText[i] = (byte) (plainText[i] + keyword[keywordPointer]); // basically caesar
       }
-    } else { // si l'on ne code pas les epaces
-      int encodedLettersCounter = 0;
+    } else { // without space encoding
+      int encodedLettersCounter = 0; // keep track only of encoded characters that are not 32
       for (int i = 0; i < plainText.length; i++) {
-        int keywordPointer = encodedLettersCounter % keyword.length;
-        cipherText[i] = (byte) (plainText[i] + keyword[keywordPointer]);
+        int keywordPointer = encodedLettersCounter % keyword.length; // tells which part of the key to use
         switch (plainText[i]) {
           case SPACE:
             cipherText[i] = SPACE;
             break;
           default:
-            cipherText[i] = (byte) (plainText[i] + keyword[keywordPointer]);
+            cipherText[i] = (byte) (plainText[i] + keyword[keywordPointer]); // basically caesar
             ++encodedLettersCounter;
             break;
         }
@@ -216,10 +221,17 @@ public class Encrypt {
    * @return an encoded byte array
    */
   public static byte[] oneTimePad(byte[] plainText, byte[] pad) {
+    assert plainText.length == pad.length;
+    assert plainText != null;
+    assert pad != null;
+    assert plainText.length != 0;
+    assert pad.length != 0;
+
+    // deepcopy of plaintext to get the desired result
     byte[] cipherText = Arrays.copyOf(plainText, plainText.length);
 
     for (int i = 0; i < cipherText.length; i++) {
-      cipherText[i] = (byte) (plainText[i] ^ pad[i % pad.length]);
+      cipherText[i] = (byte) (plainText[i] ^ pad[i]); // basically xor
     }
 
     return cipherText;
@@ -236,18 +248,26 @@ public class Encrypt {
    * @return an encoded byte array
    */
   public static byte[] cbc(byte[] plainText, byte[] iv) {
-    int blockLength = iv.length;
-    byte[] cihperedText = new byte[plainText.length];
-    byte[] key = Arrays.copyOf(iv, blockLength);
-    int iterationsRequired = (int) Math.ceil((double) plainText.length / blockLength);
-    int currentIteration = 0;
-    while (currentIteration < iterationsRequired) {
-      int startIndex = currentIteration * blockLength;
-      int endIndex = (currentIteration + 1) * blockLength;
-      byte[] cipheredPart = Arrays.copyOfRange(plainText, startIndex, endIndex);
-      cipheredPart = Encrypt.oneTimePad(cipheredPart, key);
-      key = cipheredPart;
-      for (int i = startIndex; i < cihperedText.length; ++i) {
+    assert plainText != null;
+    assert plainText.length != 0;
+    assert iv != null;
+    assert iv.length != 0;
+
+    int blockLength = iv.length; // a variable to keep track of lentgh of every block
+    byte[] cihperedText = new byte[plainText.length]; // empty array to store every crytpted block
+    byte[] key = Arrays.copyOf(iv, blockLength); // variable that keep track of the key
+    int iterationsRequired = (int) Math.ceil((double) plainText.length / blockLength); // the number of iteration
+                                                                                       // required to encrypt
+    int currentIteration = 0; // just a counter to stop when it's done
+
+    while (currentIteration < iterationsRequired) { // cycle that encrypt every block
+      int startIndex = currentIteration * blockLength; // determine the start of each block
+      int endIndex = (currentIteration + 1) * blockLength; // determine the end of each block
+      byte[] cipheredPart = Arrays.copyOfRange(plainText, startIndex, endIndex); // cuts the array to encrypt just the
+                                                                                 // block
+      cipheredPart = Encrypt.oneTimePad(cipheredPart, key); // encrypt the block with otp
+      key = cipheredPart; // updates the key with the new ciphered block
+      for (int i = startIndex; i < cihperedText.length; ++i) { // store the encrypted block into cipheredText
         cihperedText[i] = cipheredPart[i % blockLength];
       }
       ++currentIteration;
@@ -263,9 +283,11 @@ public class Encrypt {
    * @return random bytes in an array
    */
   public static byte[] generatePad(int size) {
+    assert size != 0;
+
     byte[] randomByteSequence = new byte[size];
     for (int i = 0; i < size; ++i) {
-      randomByteSequence[i] = (byte) (LOWER_BOUND + rand.nextInt(256));
+      randomByteSequence[i] = (byte) (LOWER_BOUND + rand.nextInt(256)); // just a random number from -128 to 127
     }
     return randomByteSequence;
   }

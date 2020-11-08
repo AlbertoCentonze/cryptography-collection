@@ -14,7 +14,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testCaesarWithFrequencies();
+    testOtpAllCombinations();
   }
 
   public static void testBruteForce() {
@@ -246,23 +246,15 @@ public class Main {
 
   public static void testOtpAllCombinations() {
     byte[] text = Helper.stringToBytes(Helper.readStringFromFile("long_text.txt"));
-    int i = 0;
-    int size = 1;
-    while (i < 1000) {
-      if (i > size * 10) {
-        ++size;
+    byte[] key = Encrypt.generatePad(text.length);
+    byte[] encoded = Encrypt.oneTimePad(text, key);
+    byte[] decoded = Encrypt.oneTimePad(encoded, key);
+    for (int c = 0; c < text.length; ++c) {
+      byte a = text[c];
+      byte b = decoded[c];
+      if (a != b) {
+        System.out.println(c);
       }
-      byte[] key = Encrypt.generatePad(size);
-      byte[] encoded = Encrypt.oneTimePad(text, key);
-      byte[] decoded = Encrypt.oneTimePad(encoded, key);
-      for (int c = 0; c < text.length; ++c) {
-        byte a = text[c];
-        byte b = decoded[c];
-        if (a != b) {
-          System.out.println(c);
-        }
-      }
-      ++i;
     }
   }
 
