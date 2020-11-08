@@ -6,34 +6,35 @@ public class Shell {
   private static Scanner keyboard = new Scanner(System.in);
 
   public static void main(String args[]) {
-
+    int choice = 0;
+    String welcome = "If you need help understanding how the shell works (Write help) " + System.lineSeparator()
+        + "Do you want to code a message or to decode a message ? (Write code or decode) : ";
     // Demande à l'utilisateur s'il veut coder ou décoder un message
-    String answer = asking();
+    String[] whatToDo = { "encrypt", "decrypt", "help" };
+    choice = askSomething(welcome, whatToDo);
 
     // Demande le message à l'utilisateur, demande tant qu'il n'est pas null.
     String message = message();
 
-    String s1 = "code";
-    String s2 = "decode";
-    String s3 = "Help";
-    int i = 0;
-
-    
-    if (answer.equals(s3)) {
+    if (choice == 2) { // help
       System.out.println(
-          " At the start of the program we will let you choose whether you want to encode a message or decode a message. Then we will ask you to write this message (in letters). You will be able to choose between several different techniques." + System.lineSeparator()
-              + System.lineSeparator() + "If you code: " + System.lineSeparator() + "- Caesar" + System.lineSeparator() + "- Vigenere "System.lineSeparator() + "- XorSystem.lineSeparator()
-              + "- One-Time Pad (OTP)" + System.lineSeparator() + "- Cipher Block Chaining (CBC)System.lineSeparator() + System.lineSeparator()
-              + "If you decode:"System.lineSeparator() + "- Caesar Brute ForceSystem.lineSeparator() + "- XorSystem.lineSeparator() + "- CBCSystem.lineSeparator()
-              + "- Clever deciphering of the CaesarSystem.lineSeparator() + "- Deciphering by VigenèreSystem.lineSeparator() + System.lineSeparator()
-              + "Dans la partie codage, vous pourrez pour certaine technique de chiffrement, choisir si oui ou non 0vous voulez coder les espaces présent dans votre message.System.lineSeparator()
-              + "In the case of message encoding, you will have to give the key, the size of which varies depending on the selected encryption technique.System.lineSeparator()
-              + "For the decryption of the CBC, it will be required to enter the first pad used to encode the message.System.lineSeparator()
-              + "The result will then be displayed. ");
+          " At the start of the program we will let you choose whether you want to encode a message or decode a message. Then we will ask you to write this message (in letters). You will be able to choose between several different techniques."
+              + System.lineSeparator() + System.lineSeparator() + "If you code: " + System.lineSeparator() + "- Caesar"
+              + System.lineSeparator() + "- Vigenere " + System.lineSeparator() + "- Xor" + System.lineSeparator()
+              + "- One-Time Pad (OTP)" + System.lineSeparator() + "- Cipher Block Chaining (CBC)"
+              + System.lineSeparator() + System.lineSeparator() + "If you decode:" + System.lineSeparator()
+              + "- Caesar Brute Force" + System.lineSeparator() + "- Xor" + System.lineSeparator() + "- CBC"
+              + System.lineSeparator() + "- Clever deciphering of the Caesar" + System.lineSeparator()
+              + "- Deciphering by Vigenère" + System.lineSeparator() + System.lineSeparator()
+              + "Dans la partie codage, vous pourrez pour certaine technique de chiffrement, choisir si oui ou non 0vous voulez coder les espaces présent dans votre message."
+              + System.lineSeparator()
+              + "In the case of message encoding, you will have to give the key, the size of which varies depending on the selected encryption technique."
+              + System.lineSeparator()
+              + "For the decryption of the CBC, it will be required to enter the first pad used to encode the message."
+              + System.lineSeparator() + "The result will then be displayed. ");
     }
 
-    // Si l'on code
-    else if (answer.equals(s1)) {
+    else if (choice == 0) { // encrypt
 
       // Savoir avec quelle methode, demande tant que la méthode est incorrecte
       String methode = methodeCode();
@@ -91,7 +92,7 @@ public class Shell {
     }
 
     // Si l'on decode
-    else if (answer.equals(s2)) {
+    else if (choice == 1) { // decrypt
 
       String methode = methodeDecode();
 
@@ -130,16 +131,32 @@ public class Shell {
     }
   }
 
+  public static int askSomething(String message, String[] options) {
+    boolean correctAnswer = false;
+    int answer = -1;
+    while (!correctAnswer) {
+
+      System.out.println(message);
+      for (int i = 1; i < options.length; ++i) {
+        System.out.println(i + options[i - 1]);
+      }
+      answer = keyboard.nextInt() - 1;
+      if (answer <= options.length && answer > 0) {
+        correctAnswer = true;
+      } else {
+        System.out.println("The input was wrong, try again");
+      }
+    }
+    return answer;
+  }
+
   public static String asking() {
 
     String answer = "";
-    String s1 = "code";
-    String s2 = "decode";
-    String s3 = "Help";
+    String[] answers = { "encrypt", "decrypt", "help" };
     boolean correctAnswer = false;
     do {
-      System.out.println("If you need help understanding how the shell works (Write help) " + System.lineSeparator()
-          + "Do you want to code a message or to decode a message ? (Write code or decode) : ");
+      System.out.println();
       answer += keyboard.nextLine();
       if (answer.equals(s1) || answer.equals(s2) || answer.equals(s3)) {
         correctAnswer = true;
@@ -148,14 +165,15 @@ public class Shell {
     return answer;
   }
 
-  public static String message() {
+  public static String inerstText(String message) {
+    String text;
 
-    String message;
     do {
-      System.out.println("Write down the message you want to code : ");
-      message = keyboard.nextLine();
-    } while (message != null);
-    return message;
+      System.out.println(message);
+      text = keyboard.nextLine();
+    } while (text != null);
+
+    return text;
   }
 
   public static String methodeCode() {
