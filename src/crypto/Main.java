@@ -1,6 +1,7 @@
 package crypto;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -13,7 +14,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testCaesarWithFrequencies();
+    testVigenereWithFrequencies();
   }
 
   public static void testRapidCaesar() {
@@ -153,7 +154,7 @@ public class Main {
 
   public static void testVigenereKeyFinder() {
     byte[] cipher = Encrypt.vigenere(Helper.stringToBytes(Helper.readStringFromFile("text_one.txt")),
-        new byte[] { 12, -34, 125, 89 });
+        new byte[] { 12, -34, 125, 89, -45 });
     Decrypt.vigenereWithFrequencies(cipher);
   }
 
@@ -164,6 +165,19 @@ public class Main {
       byte resultKey = Decrypt.caesarWithFrequencies(encoded);
       if (resultKey != key)
         System.out.println("TEST FAILED at key " + key);
+    }
+  }
+
+  public static void testVigenereWithFrequencies() {
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("long_text.txt"));
+    int i = 0;
+    while (i < 100) {
+      byte[] key = Encrypt.generatePad(4);
+      byte[] encoded = Encrypt.vigenere(text, key);
+      byte[] resultKey = Decrypt.vigenereWithFrequencies(encoded);
+      if (!Arrays.equals(resultKey, key))
+        System.out.println("TEST FAILED at key " + Helper.byteArrayToString(key));
+      ++i;
     }
   }
 
@@ -183,4 +197,18 @@ public class Main {
       }
     }
   }
+
+  public static void testChallenge() {
+    byte[] challenge = Helper.stringToBytes(Helper.readStringFromFile("challenge-encrypted.txt"));
+    byte[] key = Decrypt.vigenereWithFrequencies(challenge);
+    System.out.println(Helper.byteArrayToString(key));
+  }
+
+  public static void decryptChallenge2() {
+    byte[] challenge = Helper.stringToBytes(Helper.readStringFromFile("challenge-encrypted.txt"));
+    byte[] decoded = Encrypt.vigenere(challenge, new byte[] { 101, 106, 101 });
+    String output = Helper.bytesToString(decoded);
+    System.out.println(output);
+  }
+
 }

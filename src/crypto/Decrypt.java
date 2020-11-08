@@ -206,9 +206,7 @@ public class Decrypt {
     int keyLength = vigenereFindKeyLength(cipherWithoutSpaces);
     System.out.println("The length of the key is: " + keyLength);
     byte[] key = vigenereFindKey(cipherWithoutSpaces, keyLength);
-    System.out.println("The key is: " + Helper.byteArrayToString(key));
-
-    return null;
+    return key;
   }
 
   /**
