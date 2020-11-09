@@ -13,25 +13,22 @@ public class Shell {
         + "Do you want to code a message or to decode a message ? (Write code or decode) : ";
     String[] whatToDo = { "encrypt", "decrypt", "help" };
     int choice = askSomething(welcome, whatToDo);
-
-    
-    
-    
+           
     if (choice == 2) { // help
       System.out.println(
-          " At the start of the program we will let you choose whether you want to encode a message or decode a message. Then we will ask you to write this message (in letters). You will be able to choose between several different techniques."
+          " At the start of the program you will choose whether encrypting a message or decrypting a message. You will be able to write this message (in lowercase letters) and choose between several different techniques."
               + System.lineSeparator() + System.lineSeparator() + "If you code: " + System.lineSeparator() + "- Caesar"
               + System.lineSeparator() + "- Vigenere " + System.lineSeparator() + "- Xor" + System.lineSeparator()
               + "- One-Time Pad (OTP)" + System.lineSeparator() + "- Cipher Block Chaining (CBC)"
               + System.lineSeparator() + System.lineSeparator() + "If you decode:" + System.lineSeparator()
-              + "- Caesar Brute Force" + System.lineSeparator() + "- Xor" + System.lineSeparator() + "- CBC"
-              + System.lineSeparator() + "- Clever deciphering of the Caesar" + System.lineSeparator()
-              + "- Deciphering by Vigenère" + System.lineSeparator() + System.lineSeparator()
-              
-              + "In the case of message encoding, you will have to give the key, the size of which varies depending on the selected encryption technique."
+              + "- Caesar Brute Force" + System.lineSeparator() + "- Caesar With Frequencies" + System.lineSeparator() + "- Xor Brute Force"
+              + System.lineSeparator() + "- Vigenere With Frequencies" + System.lineSeparator()
+              + "- Decrypt CBC" + System.lineSeparator() + System.lineSeparator()              
+              + "If you choose to encode a message, you will have to give the key. "+ System.lineSeparator()
+              + "Depending on the selected encryption technique, you may have to choose a key with multiple variables. To do so, you will choose the size of the key, and then all the variables ."
               + System.lineSeparator()
               + "For the decryption of the CBC, it will be required to enter the first pad used to encode the message."
-              + System.lineSeparator() + "The result will then be displayed. ");
+              + System.lineSeparator() + System.lineSeparator() + "The result will then be displayed. ");
       return;
     }
     else if (choice == 0) { // encrypt
@@ -93,12 +90,12 @@ public class Shell {
 
     else if (choice == 1) { // decrypt
     	
+    	
     	// Demande le message à l'utilisateur, demande tant qu'il n'est pas null.
-    
     	String askinsert = "Write the code you want to decrypt : ";     
         String message = insertText(askinsert);    
         byte[] messageByte = Helper.stringToBytes(message);
-      //   do { }(while message != null);
+      
 
     	String askWichMethodDecode ="Your message can be decoded with CaesarBruteForce, CaesarWithFrequencies, XorBruteForce, VigenereWithFrequencies or DecryptCBC. Which one do you want ? (Write it in lowercase letter, ex : DecryptCBC => decryptcbc) : ";    	
     	String [] wichMethodDecode = {"caesarbruteforce", "caesarwithfrequencies", "xorbruteforce", "vigenerewithfrequencies", "decryptcbc"};
@@ -112,15 +109,17 @@ public class Shell {
     	      resultString += Helper.bytesToString(possibleLine);
     	      resultString += " ==++== ";
     	    }
-    	    Helper.writeStringToFile(resultString, "bruteForceCaesarResult.txt");    	     	 
-         
+    	    Helper.writeStringToFile(resultString, "bruteForceCaesarResult.txt");    	     	         
       }
+      
       // Avec caesarwithfrequencies
       else if (methodeDecode == 1) {
-    	 byte decodedMessage = Decrypt.caesarWithFrequencies(messageByte);
-    	
-    	  
+    	 byte key = Decrypt.caesarWithFrequencies(messageByte);
+         byte[] decodedMessage = Encrypt.caesar(messageByte, key);
+         String result= Helper.byteArrayToString(decodedMessage);
+         System.out.println("The decoded message is : "+ result);   	  
       }
+      
       // Avec xorbruteforce
       else if (methodeDecode == 2) {   	      	      	   
     	   byte[][] result =  Decrypt.xorBruteForce(messageByte);
@@ -130,30 +129,27 @@ public class Shell {
     	      resultString += " ==++== ";
     	    }
     	    Helper.writeStringToFile(resultString, "bruteForceXorResult.txt");
-
-    	  }
-
-    	 
-      }
+      	}    	 
+      
       // Avec vigenerewithfrequencies
-      else if (methodeDecode == 3) {
-    	  byte [] decodedMessage = Decrypt.vigenereWithFrequencies(messageByte);
-    	  String result= Helper.byteArrayToString(decodedMessage);
-          System.out.println("The encoded message is : "+ result);
+      else if (methodeDecode == 3) {    	  
+    	  byte [] key = Decrypt.vigenereWithFrequencies(messageByte);
+    	  byte[] decodedMessage = Encrypt.vigenere(messageByte, key);
+          String result = Helper.byteArrayToString(decodedMessage);   	  
+          System.out.println("The decoded message is : "+ result);
       }
       // Avec decryptcbc
       else if (methodeDecode == 4) {
-
         int keySize = keySize();
-
         byte tab[] = keyTab(keySize);
-        Decrypt.decryptCBC(messageByte, tab);
-
+        byte [] decodedMessage= Decrypt.decryptCBC(messageByte, tab);
+        String result = Helper.byteArrayToString(decodedMessage);  	  
+        System.out.println("The decoded message is : "+ result);
       }
-
     }
   }
-
+  
+  
   public static int askSomething(String message, String[] options) {
     boolean correctAnswer = false;
     int answer = -1;
@@ -173,38 +169,28 @@ public class Shell {
     return answer;
   }
   
-
   public static String insertText(String message) {
     String text = "";
-
     while (text.equals("")) {
       System.out.println(message);
       text = keyboard.nextLine();
     }
-
     return text;
   }
 
-
-  public static int keylengthOf1() {
-
-    
+  public static int keylengthOf1() {    
     System.out.println("What is the key you want to use (Write a number) ? : ");
     int key = keyboard.nextInt();
     return key;
   }
 
-  public static int keySize() {
-
-   
+  public static int keySize() {  
     System.out.println("What is the size of your key ? : ");
     int size = keyboard.nextInt();
     return size;
   }
 
-  public static byte[] keyTab(int keySize) {
-
-    
+  public static byte[] keyTab(int keySize) {  
     System.out.println("The size of your key is : " + keySize);
     System.out.println("You have to put " +keySize+" number(s) to fill up your key (write numbers) : ");
 
@@ -213,13 +199,10 @@ public class Shell {
       System.out.println();
       tabKey[i] = (byte)keyboard.nextInt();
     }
-
     return tabKey;
   }
 
   public static byte[] keyOneTimePad(String message) {
-
-    
     System.out.println("The size of your message is : " + message.length());
     System.out.println("You have to put one key number per letter of your message (write numbers) : ");
 
@@ -228,8 +211,6 @@ public class Shell {
       System.out.println();
       tabKey[i] = (byte)keyboard.nextInt();
     }
-
     return tabKey;
-  }
-     
+  }     
 }
