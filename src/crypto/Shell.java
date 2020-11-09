@@ -37,7 +37,7 @@ public class Shell {
     else if (choice == 0) { // encrypt
     	
     	// Demande le message à l'utilisateur, demande tant qu'il n'est pas null.
-    String askinsert = "Write the code you want to encrypt : ";
+    String askinsert = "Write the code you want to encrypt : (You have to write it in lower case letters) ";
     String message = insertText(askinsert);    
     byte[] messageByte = Helper.stringToBytes(message);
     
@@ -49,7 +49,9 @@ public class Shell {
       // Avec CAESAR
       if (methode == 0) {
         byte key = (byte)keylengthOf1();
-        Encrypt.caesar(messageByte, key);
+        byte[] encodedMessage = Encrypt.caesar(messageByte, key);
+        String result= Helper.byteArrayToString(encodedMessage);
+        System.out.println("The encoded message is : "+ result);
      
       }
       // Avec VIGENERE
@@ -57,27 +59,35 @@ public class Shell {
 
         int keySize = keySize();
         byte tab[] = keyTab(keySize);
-        Encrypt.vigenere(messageByte,tab);
+        byte[] encodedMessage = Encrypt.vigenere(messageByte,tab);
+        String result= Helper.byteArrayToString(encodedMessage);
+        System.out.println("The encoded message is : "+ result);
        
       }
       // AvecXOR
       else if (methode == 2) {
         byte key = (byte) keylengthOf1();
-        Encrypt.xor(messageByte, key);
+        byte[] encodedMessage = Encrypt.xor(messageByte, key);
+        String result= Helper.byteArrayToString(encodedMessage);
+        System.out.println("The encoded message is : "+ result);
        
       }
       // Avec ONETIME
       else if (methode == 3) {
 
         byte tab[] = keyOneTimePad(message);
-        Encrypt.oneTimePad(messageByte, tab);
+        byte[] encodedMessage = Encrypt.oneTimePad(messageByte, tab);
+        String result= Helper.byteArrayToString(encodedMessage);
+        System.out.println("The encoded message is : "+ result);
       }
       // Avec CBC
       else if (methode == 4) {
 
         int keySize = keySize();
         byte tab[] = keyTab(keySize);
-        Encrypt.cbc(messageByte, tab);
+        byte[] encodedMessage = Encrypt.cbc(messageByte, tab);
+        String result= Helper.byteArrayToString(encodedMessage);
+        System.out.println("The encoded message is : "+ result);
       }
     }
 
@@ -96,19 +106,40 @@ public class Shell {
     	
       // Avec caesarbruteforce
       if (methodeDecode == 0) {
-    	  Decrypt.caesarBruteForce(messageByte);
+    	  byte[][] result = Decrypt.caesarBruteForce(messageByte);
+    	  String resultString = "";
+    	    for (byte[] possibleLine : result) {
+    	      resultString += Helper.bytesToString(possibleLine);
+    	      resultString += " ==++== ";
+    	    }
+    	    Helper.writeStringToFile(resultString, "bruteForceCaesarResult.txt");    	     	 
+         
       }
       // Avec caesarwithfrequencies
       else if (methodeDecode == 1) {
-    	  Decrypt.caesarWithFrequencies(messageByte);
+    	 byte decodedMessage = Decrypt.caesarWithFrequencies(messageByte);
+    	
+    	  
       }
       // Avec xorbruteforce
-      else if (methodeDecode == 2) {
-    	  Decrypt.xorBruteForce(messageByte);
+      else if (methodeDecode == 2) {   	      	      	   
+    	   byte[][] result =  Decrypt.xorBruteForce(messageByte);
+    	    String resultString = "";
+    	    for (byte[] possibleLine : result) {
+    	      resultString += Helper.bytesToString(possibleLine);
+    	      resultString += " ==++== ";
+    	    }
+    	    Helper.writeStringToFile(resultString, "bruteForceXorResult.txt");
+
+    	  }
+
+    	 
       }
       // Avec vigenerewithfrequencies
       else if (methodeDecode == 3) {
-    	  Decrypt.vigenereWithFrequencies(messageByte);
+    	  byte [] decodedMessage = Decrypt.vigenereWithFrequencies(messageByte);
+    	  String result= Helper.byteArrayToString(decodedMessage);
+          System.out.println("The encoded message is : "+ result);
       }
       // Avec decryptcbc
       else if (methodeDecode == 4) {
@@ -157,7 +188,7 @@ public class Shell {
 
   public static int keylengthOf1() {
 
-    // Savoir la clé, tant qu'elle n'est pas nulle
+    
     System.out.println("What is the key you want to use (Write a number) ? : ");
     int key = keyboard.nextInt();
     return key;
@@ -165,7 +196,7 @@ public class Shell {
 
   public static int keySize() {
 
-    // Savoir la clé, (tant qu'elle n'est pas nulle ??)
+   
     System.out.println("What is the size of your key ? : ");
     int size = keyboard.nextInt();
     return size;
@@ -173,7 +204,7 @@ public class Shell {
 
   public static byte[] keyTab(int keySize) {
 
-    // Creation d'untableau qui condiendra les clés
+    
     System.out.println("The size of your key is : " + keySize);
     System.out.println("You have to put " +keySize+" number(s) to fill up your key (write numbers) : ");
 
@@ -188,7 +219,7 @@ public class Shell {
 
   public static byte[] keyOneTimePad(String message) {
 
-    // Une clé pour chque lettre (transformée en byte) du message
+    
     System.out.println("The size of your message is : " + message.length());
     System.out.println("You have to put one key number per letter of your message (write numbers) : ");
 
@@ -200,7 +231,5 @@ public class Shell {
 
     return tabKey;
   }
-
-
-  
+     
 }
