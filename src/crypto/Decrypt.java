@@ -42,7 +42,7 @@ public class Decrypt {
     } else if (type == VIGENERE) {
       byte[] originalKey = vigenereWithFrequencies(encoded);
       byte[] inverseKey = vigenereFindInverseKey(originalKey);
-      byte[] decoded = Encrypt.vigenere(encoded, inverseKey);
+      byte[] decoded = Encrypt.vigenere(encoded, inverseKey, true);
       return Helper.bytesToString(decoded);
       // TODO test
     } else if (type == XOR) {

@@ -32,23 +32,25 @@ public class Encrypt {
    *         algorithm, it returns the original message
    */
   public static String encrypt(String message, String key, int type) {
-    switch (type) {
-      case CAESAR:
-        return Helper.bytesToString(caesar(Helper.stringToBytes(message), Helper.stringToBytes(key)[0]));
-      case VIGENERE:
-        return Helper.bytesToString(vigenere(Helper.stringToBytes(message), Helper.stringToBytes(key)));
-      case XOR:
-        return Helper.bytesToString(xor(Helper.stringToBytes(message), Helper.stringToBytes(key)[0]));
-      case ONETIME:
-        byte[] encoded = oneTimePad(Helper.stringToBytes(message), Helper.stringToBytes(key));
-        if (encoded == null)
-          return "";
-        else
-          return Helper.bytesToString(encoded);
-      case CBC:
-        return Helper.bytesToString(cbc(Helper.stringToBytes(message), Helper.stringToBytes(key)));
+    String encodedString = "";
+    byte[] bytesMessage = Helper.stringToBytes(message);
+    byte[] bytesKey = Helper.stringToBytes(key);
+    byte[] encoded = new byte[bytesMessage.length];
+    if (type == CAESAR) {
+      encoded = caesar(bytesMessage, bytesKey[0]);
+    } else if (type == VIGENERE) {
+      encoded = vigenere(bytesMessage, bytesKey);
+    } else if (type == XOR) {
+      encoded = xor(bytesMessage, bytesKey[0]);
+    } else if (type == ONETIME) {
+      encoded = oneTimePad(bytesMessage, bytesKey);
+    } else if (type == CBC) {
+      encoded = cbc(bytesMessage, bytesKey);
+    } else if (type > 4 || type < 0) {
+      return message;
     }
-    return message;
+    encodedString = Helper.bytesToString(encoded);
+    return encodedString;
   }
 
   // -----------------------Caesar-------------------------
@@ -253,22 +255,24 @@ public class Encrypt {
     assert iv != null;
     assert iv.length != 0;
 
-    int blockLength = iv.length; // a variable to keep track of lentgh of every block
+    final int BLOCKSIZE = iv.length; // a variable to keep track of lentgh of every block
+
     byte[] cihperedText = new byte[plainText.length]; // empty array to store every crytpted block
-    byte[] key = Arrays.copyOf(iv, blockLength); // variable that keep track of the key
-    int iterationsRequired = (int) Math.ceil((double) plainText.length / blockLength); // the number of iteration
-                                                                                       // required to encrypt
+    byte[] key = Arrays.copyOf(iv, BLOCKSIZE); // variable that keep track of the key
+
+    int iterationsRequired = (int) Math.ceil((double) plainText.length / BLOCKSIZE); // the number of iteration
+                                                                                     // required to encrypt
     int currentIteration = 0; // just a counter to stop when it's done
 
     while (currentIteration < iterationsRequired) { // cycle that encrypt every block
-      int startIndex = currentIteration * blockLength; // determine the start of each block
-      int endIndex = (currentIteration + 1) * blockLength; // determine the end of each block
+      int startIndex = currentIteration * BLOCKSIZE; // determine the start of each block
+      int endIndex = (currentIteration + 1) * BLOCKSIZE; // determine the end of each block
       byte[] cipheredPart = Arrays.copyOfRange(plainText, startIndex, endIndex); // cuts the array to encrypt just the
                                                                                  // block
       cipheredPart = Encrypt.oneTimePad(cipheredPart, key); // encrypt the block with otp
       key = cipheredPart; // updates the key with the new ciphered block
       for (int i = startIndex; i < cihperedText.length; ++i) { // store the encrypted block into cipheredText
-        cihperedText[i] = cipheredPart[i % blockLength];
+        cihperedText[i] = cipheredPart[i % BLOCKSIZE];
       }
       ++currentIteration;
     }

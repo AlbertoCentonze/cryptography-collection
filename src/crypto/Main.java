@@ -14,7 +14,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    breakCipherTest();
+    testAssertions();
   }
 
   public static void testBruteForce() {
@@ -233,7 +233,7 @@ public class Main {
       byte[] key = Encrypt.generatePad(size);
       byte[] encoded = Encrypt.vigenere(text, key, true);
 
-      byte[] decoded = Encrypt.vigenere(encoded, Helper.keyInverterVigenere(key), true);
+      byte[] decoded = Encrypt.vigenere(encoded, Decrypt.vigenereFindInverseKey(key), true);
       for (int c = 0; c < text.length; ++c) {
         byte a = text[c];
         byte b = decoded[c];
@@ -283,9 +283,34 @@ public class Main {
   }
 
   public static void breakCipherTest() {
-    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("long_text.txt"));
-    byte[] encoded = Encrypt.vigenere(text, new byte[] { 120, 45, -89 });
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("text_two.txt"));
+    byte[] key = { 120, 45, -89 };
+    byte[] encoded = Encrypt.vigenere(text, key, true);
     String encodedString = Helper.bytesToString(encoded);
-    System.out.println(Decrypt.breakCipher(encodedString, 1));
+    byte[] inverseKey = Decrypt.vigenereFindInverseKey(Decrypt.vigenereWithFrequencies(encoded));
+    byte[] decoded = Encrypt.vigenere(encoded, inverseKey, true);
+    String decodedString = Helper.bytesToString(decoded);
+    System.out.println(decodedString);
+    System.out.println(Decrypt.breakCipher(Helper.readStringFromFile("text_two.txt"), 1));
+  }
+
+  public static void encryptTest() {
+    String text = Helper.readStringFromFile("text_two.txt");
+    System.out.println(text);
+    String[] methods = { "Caesar", "Vigenere", "XOR", "OneTimePad", "cbc" };
+    byte[] key = { 89, 12, -64 };
+    String sKey = Helper.bytesToString(key);
+    for (int i = 0; i < methods.length; ++i) {
+      if (i == 3) {
+        continue;
+      }
+      System.out.println(methods[i]);
+
+      System.out.println(Encrypt.encrypt(text, sKey, i));
+    }
+  }
+
+  public static void testAssertions() {
+    Encrypt.caesar(null, (byte) 50);
   }
 }
