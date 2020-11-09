@@ -212,14 +212,20 @@ public class Shell {
   }
 
   public static int keySize() {
-    System.out.println("What is the size of your key ? : ");
-    int size = keyboard.nextInt();
+    int size = 0;
+    while (size < 2) {
+      System.out.println("What is the size of your key ? : ");
+      size = keyboard.nextInt();
+      if (size < 2)
+        System.out.println("Wrong size, please retry");
+    }
     return size;
   }
 
   public static byte[] keyTab(int keySize) {
     System.out.println("The size of your key is : " + keySize);
-    System.out.println("You have to put " + keySize + " number(s) to fill up your key (write numbers) : ");
+    System.out.println("You have to put " + keySize + " numbers to fill up your key: ");
+    System.out.println("Insert ONE byte and then press enter");
 
     byte tabKey[] = new byte[keySize];
     for (int i = 0; i < keySize; ++i) {
