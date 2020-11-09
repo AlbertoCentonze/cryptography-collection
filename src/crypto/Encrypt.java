@@ -44,7 +44,7 @@ public class Encrypt {
         if (encoded == null)
           return "";
         else
-          return Helper.byteArrayToString(encoded);
+          return Helper.bytesToString(encoded);
       case CBC:
         return Helper.bytesToString(cbc(Helper.stringToBytes(message), Helper.stringToBytes(key)));
     }
