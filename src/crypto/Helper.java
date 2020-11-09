@@ -126,16 +126,6 @@ public class Helper {
       System.out.println(element);
   }
 
-  public static String byteArrayToString(byte[] array) {
-    String output = "";
-    for (byte element : array) {
-      output += element;
-      output += " ";
-    }
-
-    return output;
-  }
-
   public static List<Byte> convertBytesToList(byte[] bytes) {
     final List<Byte> list = new ArrayList<>();
     for (byte b : bytes) {

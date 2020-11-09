@@ -187,8 +187,9 @@ public class Decrypt {
         maximumIndex = i;
       }
     }
-    key = (byte) (maximumIndex - 97); // convert the distance between the maximum scalar product and the a position of
-                                      // the alphabet into the key
+    key = (byte) -(maximumIndex - 97); // convert the distance between the maximum scalar product and the
+                                       // aposition of the alphabet into the key
+
     return key;
   }
 
@@ -402,7 +403,7 @@ public class Decrypt {
       key[i] = Decrypt.caesarWithFrequencies(primitiveArray); // deciphering each individual sequence with caesar
     }
 
-    return vigenereFindInverseKey(key);
+    return key;
     // KNOWN PROBLEM the key is always correct but not always in the correct order
     // if you are correcting this please contact me and tell me why
     // alberto.centonze@epfl.ch

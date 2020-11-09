@@ -6,11 +6,18 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - Shell",
+      "request": "launch",
+      "mainClass": "crypto.Shell",
+      "projectName": "cs-107-project1"
+    },
+    {
+      "type": "java",
       "name": "Debug with assertions",
       "request": "launch",
       "mainClass": "crypto.Main",
       "projectName": "cs-107-project1",
       "vmArgs": "-enableassertions"
-    },
+    }
   ]
 }

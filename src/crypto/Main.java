@@ -137,8 +137,8 @@ public class Main {
     byte[] key = new byte[] { 5, -17 };
     byte[] cipher = Encrypt.cbc(new byte[] { 10, 28, 30, 45, 56 }, key);
     byte[] decipher = Decrypt.decryptCBC(cipher, key);
-    // Helper.printByteArray(cipher);
-    // Helper.printByteArray(decipher);
+    System.out.println(Shell.byteArrayToString(cipher));
+    System.out.println(Shell.byteArrayToString(decipher));
   }
 
   public static void testCaesarFindKey() {
@@ -189,18 +189,20 @@ public class Main {
   }
 
   public static void testCaesarAllCombination() {
-    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("text_one.txt"));
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("long_text.txt"));
     byte[] decoded = new byte[text.length];
+    byte inverseKey;
     for (Integer key = -128; key < 128; ++key) {
-      byte[] encoded = Encrypt.caesar(text, key.byteValue());
-      decoded = Encrypt.caesar(encoded, (byte) -key.byteValue());
-    }
+      byte[] encoded = Encrypt.caesar(text, key.byteValue(), true);
+      inverseKey = (byte) Decrypt.caesarWithFrequencies(encoded);
+      decoded = Encrypt.caesar(encoded, inverseKey, true);
 
-    for (int i = 0; i < text.length; ++i) {
-      byte a = text[i];
-      byte b = decoded[i];
-      if (a != b) {
-        System.out.println(i);
+      for (int i = 0; i < text.length; ++i) {
+        byte a = text[i];
+        byte b = decoded[i];
+        if (a != b) {
+          System.out.println(i);
+        }
       }
     }
   }
@@ -284,7 +286,7 @@ public class Main {
 
   public static void breakCipherTest() {
     byte[] text = Helper.stringToBytes(Helper.readStringFromFile("text_two.txt"));
-    byte[] key = { 120, 45, -89 };
+    byte[] key = Encrypt.generatePad(3);
     byte[] encoded = Encrypt.vigenere(text, key);
     String encodedString = Helper.bytesToString(encoded);
     System.out.println(Decrypt.breakCipher(encodedString, 1));
