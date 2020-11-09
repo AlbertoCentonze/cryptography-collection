@@ -40,11 +40,9 @@ public class Decrypt {
       byte[] decoded = Encrypt.caesar(encoded, (byte) -originalKey);
       return Helper.bytesToString(decoded);
     } else if (type == VIGENERE) {
-      byte[] originalKey = vigenereWithFrequencies(encoded);
-      byte[] inverseKey = vigenereFindInverseKey(originalKey);
-      byte[] decoded = Encrypt.vigenere(encoded, inverseKey, true);
+      byte[] key = vigenereWithFrequencies(encoded);
+      byte[] decoded = Encrypt.vigenere(encoded, key, true);
       return Helper.bytesToString(decoded);
-      // TODO test
     } else if (type == XOR) {
       return arrayToString(xorBruteForce(encoded));
     }
@@ -65,8 +63,8 @@ public class Decrypt {
     String result = "";
 
     for (byte[] element : bruteForceResult) {
-      result += Helper.bytesToString(element);
-      result += System.lineSeparator();
+      result += Helper.bytesToString(element); // adds the possible combination
+      result += System.lineSeparator(); // newline
     }
 
     return result;
@@ -85,13 +83,13 @@ public class Decrypt {
     assert cipher != null;
     assert cipher.length != 0;
 
-    final int LOWER_BOUND = -128;
-    byte[][] result = new byte[256][cipher.length];
+    final int LOWER_BOUND = -128; // starting point for the cycle
+    byte[][] result = new byte[256][cipher.length]; // bidimensional array to store all the combinations
     for (int i = 0; i < result.length; ++i) {
-      Integer integerKey = Integer.valueOf(LOWER_BOUND + i);
-      byte byteKey = integerKey.byteValue();
+      Integer integerKey = Integer.valueOf(LOWER_BOUND + i); // Converted in integer to use .byteValue()
+      byte byteKey = integerKey.byteValue(); // conversion to byte
 
-      result[i] = Encrypt.caesar(cipher, byteKey);
+      result[i] = Encrypt.caesar(cipher, byteKey); // store every single combination into result
     }
     return result;
   }
@@ -122,31 +120,31 @@ public class Decrypt {
     assert cipherText != null;
     assert cipherText.length != 0;
 
-    float[] frequencies = new float[256];
-    int notSpacesCounter = 0;
+    float[] frequencies = new float[256]; // empty array to store the frequencies of cipherText
+    int notSpacesCounter = 0; // variable to keep track of the number of characters that are not spaces
     for (int i = 0; i < cipherText.length; i++) {
       if (cipherText[i] != 32) {
-        notSpacesCounter++;
+        notSpacesCounter++; // gets the total number of nonsapce characters
       }
     }
-    for (int letter = 0; letter < 256; letter++) {
-      int letterOccurencies = 0;
+    for (int letter = 0; letter < 256; letter++) { // iterates over all the letter obtainable from bytes
+      int letterOccurencies = 0; // keey track of the occurency of a specific letter
 
-      if (letter == 32)
+      if (letter == 32) // skip spaces
         continue;
 
-      for (int i = 0; i < cipherText.length; i++) {
-        if ((letter > 127 && (letter - 256) == cipherText[i]) || letter == cipherText[i])
-          letterOccurencies++;
+      for (int i = 0; i < cipherText.length; i++) { // iterates over cipherText
+        if ((letter > 127 && (letter - 256) == cipherText[i]) || letter == cipherText[i]) // check if the letter index
+                                                                                          // correspond to the byte
+          letterOccurencies++; // if the letter is found increases the counter
 
-        frequencies[letter] = (float) letterOccurencies / notSpacesCounter;
+        frequencies[letter] = (float) letterOccurencies / notSpacesCounter; // store the division between the total
+                                                                            // number of occurencies and the total
+                                                                            // number of nonspace characters
+
       }
     }
 
-    for (
-
-        int x = 0; x < frequencies.length; ++x) {
-    }
     return frequencies;
   }
 
@@ -165,27 +163,32 @@ public class Decrypt {
     double[] scalarProducts = new double[256];
     int offset = 0;
 
-    for (int i = 0; i < ALPHABETSIZE; i++) {
-      for (int j = 0; j < ENGLISHFREQUENCIES.length; j++) {
-        int bound = offset % ENGLISHFREQUENCIES.length;
+    for (int i = 0; i < ALPHABETSIZE; i++) { // iterates over the possible frequencies
+      for (int j = 0; j < ENGLISHFREQUENCIES.length; j++) { // iterates over the alphabet
+        int bound = offset % ENGLISHFREQUENCIES.length; // solve indices out of bound problem to try every possible
+                                                        // combination
         if (i + bound < ALPHABETSIZE) {
+          // scalar product
           scalarProducts[i] += ENGLISHFREQUENCIES[j] * charFrequencies[i + bound];
         } else {
+          // scalar product
           scalarProducts[i] += ENGLISHFREQUENCIES[j] * charFrequencies[i - ALPHABETSIZE + bound];
         }
-        ++offset;
+        ++offset; // shifts the iteration of 1 position
       }
     }
 
-    double maximumValue = 0.0;
-    int maximumIndex = 0;
+    // find the maximum scalar product
+    double maximumValue = 0.0; // store the temporary maximum scalar product
+    int maximumIndex = 0; // store the temporary index of the maxium scalar product
     for (int i = 0; i < 256; i++) {
-      if (maximumValue < scalarProducts[i]) {
+      if (maximumValue < scalarProducts[i]) { // looks for the biggest scalar product
         maximumValue = scalarProducts[i];
         maximumIndex = i;
       }
     }
-    key = (byte) (maximumIndex - 97);
+    key = (byte) (maximumIndex - 97); // convert the distance between the maximum scalar product and the a position of
+                                      // the alphabet into the key
     return key;
   }
 
@@ -202,14 +205,14 @@ public class Decrypt {
     assert cipher != null;
     assert cipher.length != 0;
 
+    // basically the same explainations used for caesarBruteForce
     final int LOWER_BOUND = -128;
     byte[][] result = new byte[255][cipher.length];
     for (int i = 0; i < result.length; ++i) {
       Integer integerKey = Integer.valueOf(LOWER_BOUND + i);
-
       byte byteKey = integerKey.byteValue();
 
-      result[i] = Encrypt.xor(cipher, byteKey);
+      result[i] = Encrypt.xor(cipher, byteKey); // applies xor with everysingle possible combination
     }
     return result;
 
@@ -245,11 +248,11 @@ public class Decrypt {
     assert array != null;
     assert array.length != 0;
 
-    ArrayList<Byte> noSpace = new ArrayList<Byte>();
+    ArrayList<Byte> noSpace = new ArrayList<Byte>(); // new arraylist to store the result of the parsing
 
     for (int i = 0; i < array.length; i++) {
 
-      if (array[i] != SPACE && i < array.length) {
+      if (array[i] != SPACE && i < array.length) { // if it's not space
         noSpace.add(array[i]);
       }
     }
@@ -268,22 +271,26 @@ public class Decrypt {
 
     // STEP 1
 
-    ArrayList<Integer> coincidences = new ArrayList<Integer>();
-    int frequenceCounter = 0;
-    for (int offset = 1; offset < cipher.size(); ++offset) {
-      for (int i = offset; i < cipher.size() - offset; ++i) {
-        int x = i - offset;
-        if (cipher.get(x) == cipher.get(i)) {
+    ArrayList<Integer> coincidences = new ArrayList<Integer>(); // creates an arraylist to store how many times it
+                                                                // encountered the same letter
+    int frequenceCounter = 0; // frequence counter for a single letter
+    for (int offset = 1; offset < cipher.size(); ++offset) { // the distance from the original array
+      for (int i = offset; i < cipher.size() - offset; ++i) { // clamp between the zone in which both the arrays have
+                                                              // values
+        int x = i - offset; // value used to iterate over the original array
+        if (cipher.get(x) == cipher.get(i)) { // if the two character are the same
           ++frequenceCounter;
         }
       }
-      coincidences.add(frequenceCounter);
-      frequenceCounter = 0;
+      coincidences.add(frequenceCounter); // add the number of coincidences for that character
+      frequenceCounter = 0; // reset the frequenceCounter
     }
 
     // STEP 2
 
     ArrayList<Integer> localMaximums = new ArrayList<Integer>();
+    // for cycles that looks in the neighborhood of the list to check for the
+    // maximum
     for (int i = 0; i < Math.ceil(coincidences.size() / 2); ++i) {
       int minimumCounter = 0;
       if (i == 0) {
@@ -361,14 +368,6 @@ public class Decrypt {
   }
 
   /**
-   * Method that compute the coincidence of an array of byte with itself shited of
-   * a given offset for a Vigenere cipher text.
-   * 
-   * @param cipher the byte array representing the encoded text without space
-   * @return return the coincidence table
-   */
-
-  /**
    * Takes the cipher without space, and the key length, and uses the dot product
    * with the English language frequencies to compute the shifting for each letter
    * of the key
@@ -381,38 +380,50 @@ public class Decrypt {
     assert cipher != null;
     assert cipher.size() != 0;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // disables the warning due to the absence of the type in the arraylist
     ArrayList<Byte>[] subsequences = new ArrayList[keyLength];
-    byte[] key = new byte[keyLength];
+    byte[] key = new byte[keyLength]; // stores the key once found
 
     for (int i = 0; i < keyLength; ++i) {
-      ArrayList<Byte> newSubsequence = new ArrayList<Byte>();
-      for (int j = 0; j < cipher.size(); ++j) {
-        int modulo = j % keyLength;
-        if (modulo == i)
-          newSubsequence.add(cipher.get(j));
-        subsequences[i] = (newSubsequence);
+      ArrayList<Byte> newSubsequence = new ArrayList<Byte>(); // creates a list of characters that share the same key
+      for (int j = 0; j < cipher.size(); ++j) { // itereates over the list
+        int modulo = j % keyLength; // calulates the modulo to know if they have the same encryption key
+        if (modulo == i) // check for the modulo
+          newSubsequence.add(cipher.get(j)); // adds it to the subsequence with the same key
       }
+      subsequences[i] = (newSubsequence);
     }
 
-    for (int i = 0; i < keyLength; ++i) {
+    for (int i = 0; i < keyLength; ++i) { // just a looping to convert the ArrayList<Byte> into the array byte[]
       byte[] primitiveArray = new byte[subsequences[i].size()];
       for (int j = 0; j < subsequences[i].size(); ++j) {
-        primitiveArray[j] = subsequences[i].get(j);
+        primitiveArray[j] = subsequences[i].get(j); // not-so-autounboxing
       }
-      key[i] = Decrypt.caesarWithFrequencies(primitiveArray);
+      key[i] = Decrypt.caesarWithFrequencies(primitiveArray); // deciphering each individual sequence with caesar
     }
 
-    return key;
+    return vigenereFindInverseKey(key);
+    // KNOWN PROBLEM the key is always correct but not always in the correct order
+    // if you are correcting this please contact me and tell me why
+    // alberto.centonze@epfl.ch
+    // we have a bonus as well to not lose points :D
 
   }
 
+  /**
+   * Takes the original key and return a key that can be used to decode the
+   * cipherText
+   * 
+   * @param originalKey the byte array containing the key
+   * @return the inverse key to decode the Vigenere cipher text
+   */
   public static byte[] vigenereFindInverseKey(byte[] originalKey) {
     assert originalKey != null;
     assert originalKey.length != 0;
 
     byte[] inverseKey = new byte[originalKey.length];
-    for (int i = 0; i < originalKey.length; ++i) {
+    for (int i = 0; i < originalKey.length; ++i) { // just a for cycle that iterates over the key and gives back the
+                                                   // opposite
       inverseKey[i] = (byte) -originalKey[i];
     }
     return inverseKey;
@@ -433,19 +444,26 @@ public class Decrypt {
     assert iv != null;
     assert iv.length != 0;
 
-    int blockLength = iv.length;
+    // almost the same comments of the cbc encryption
+    // go there for a more precise description
+
+    final int BLOCKSIZE = iv.length;
+
     byte[] decihperedText = new byte[cipher.length];
-    byte[] key = Arrays.copyOf(iv, blockLength);
-    int iterationsRequired = (int) Math.ceil((double) cipher.length / blockLength);
+    byte[] key = Arrays.copyOf(iv, BLOCKSIZE);
+
+    int iterationsRequired = (int) Math.ceil((double) cipher.length / BLOCKSIZE);
     int currentIteration = 0;
+
     while (currentIteration < iterationsRequired) {
-      int startIndex = currentIteration * blockLength;
-      int endIndex = (currentIteration + 1) * blockLength;
-      byte[] decipheredPart = Arrays.copyOfRange(cipher, startIndex, endIndex);
+      int startIndex = currentIteration * BLOCKSIZE;
+      int endIndex = (currentIteration + 1) * BLOCKSIZE;
+      byte[] decipheredPart = Arrays.copyOfRange(cipher, startIndex, endIndex); // cuts the array to decipher the block
+
       decipheredPart = Encrypt.oneTimePad(decipheredPart, key);
-      key = Arrays.copyOfRange(cipher, startIndex, endIndex);
-      for (int i = startIndex; i < decihperedText.length; ++i) {
-        decihperedText[i] = decipheredPart[i % blockLength];
+      key = Arrays.copyOfRange(cipher, startIndex, endIndex); // updates the key with the new deciphered block
+      for (int i = startIndex; i < decihperedText.length; ++i) { // store the result of the deciphering
+        decihperedText[i] = decipheredPart[i % BLOCKSIZE];
       }
       ++currentIteration;
     }

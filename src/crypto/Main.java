@@ -14,7 +14,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    encryptTest();
+    breakCipherTest();
   }
 
   public static void testBruteForce() {
@@ -285,13 +285,9 @@ public class Main {
   public static void breakCipherTest() {
     byte[] text = Helper.stringToBytes(Helper.readStringFromFile("text_two.txt"));
     byte[] key = { 120, 45, -89 };
-    byte[] encoded = Encrypt.vigenere(text, key, true);
+    byte[] encoded = Encrypt.vigenere(text, key);
     String encodedString = Helper.bytesToString(encoded);
-    byte[] inverseKey = Decrypt.vigenereFindInverseKey(Decrypt.vigenereWithFrequencies(encoded));
-    byte[] decoded = Encrypt.vigenere(encoded, inverseKey, true);
-    String decodedString = Helper.bytesToString(decoded);
-    System.out.println(decodedString);
-    System.out.println(Decrypt.breakCipher(Helper.readStringFromFile("text_two.txt"), 1));
+    System.out.println(Decrypt.breakCipher(encodedString, 1));
   }
 
   public static void encryptTest() {

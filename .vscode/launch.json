@@ -6,7 +6,7 @@
   "configurations": [
     {
       "type": "java",
-      "name": "CodeLens (Launch) - Main",
+      "name": "Debug with assertions",
       "request": "launch",
       "mainClass": "crypto.Main",
       "projectName": "cs-107-project1",
