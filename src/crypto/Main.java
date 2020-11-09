@@ -14,7 +14,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testAssertions();
+    encryptTest();
   }
 
   public static void testBruteForce() {

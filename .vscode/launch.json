@@ -12,13 +12,5 @@
       "projectName": "cs-107-project1",
       "vmArgs": "-enableassertions"
     },
-    {
-      "type": "java",
-      "name": "Debug (Launch)-Main<cs-107-project1_5529c3ac>",
-      "request": "launch",
-      "mainClass": "src.crypto.Main",
-      "projectName": "cs-107-project1_5529c3ac",
-      "vmArgs": "-enableassertions"
-    }
   ]
 }

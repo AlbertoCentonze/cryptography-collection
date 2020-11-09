@@ -119,6 +119,9 @@ public class Decrypt {
    * @return the character frequencies as an array of float
    */
   public static float[] computeFrequencies(byte[] cipherText) {
+    assert cipherText != null;
+    assert cipherText.length != 0;
+
     float[] frequencies = new float[256];
     int notSpacesCounter = 0;
     for (int i = 0; i < cipherText.length; i++) {
@@ -155,6 +158,9 @@ public class Decrypt {
    * @return the key
    */
   public static byte caesarFindKey(float[] charFrequencies) {
+    assert charFrequencies != null;
+    assert charFrequencies.length != 0;
+
     byte key;
     double[] scalarProducts = new double[256];
     int offset = 0;
@@ -236,6 +242,8 @@ public class Decrypt {
    * @return a List of bytes without spaces
    */
   public static List<Byte> removeSpaces(byte[] array) {
+    assert array != null;
+    assert array.length != 0;
 
     ArrayList<Byte> noSpace = new ArrayList<Byte>();
 
@@ -255,6 +263,8 @@ public class Decrypt {
    * @return the length of the key
    */
   public static int vigenereFindKeyLength(List<Byte> cipher) {
+    assert cipher != null;
+    assert cipher.size() != 0;
 
     // STEP 1
 
@@ -398,6 +408,9 @@ public class Decrypt {
   }
 
   public static byte[] vigenereFindInverseKey(byte[] originalKey) {
+    assert originalKey != null;
+    assert originalKey.length != 0;
+
     byte[] inverseKey = new byte[originalKey.length];
     for (int i = 0; i < originalKey.length; ++i) {
       inverseKey[i] = (byte) -originalKey[i];
