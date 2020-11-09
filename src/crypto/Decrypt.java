@@ -31,13 +31,20 @@ public class Decrypt {
    *         the list above.
    */
   public static String breakCipher(String cipher, int type) {
+    assert cipher != null;
+
     byte[] encoded = Helper.stringToBytes(cipher);
+
     if (type == CAESAR) {
       byte originalKey = caesarWithFrequencies(encoded);
-      return Helper.bytesToString(Encrypt.caesar(encoded, originalKey));
+      byte[] decoded = Encrypt.caesar(encoded, (byte) -originalKey);
+      return Helper.bytesToString(decoded);
     } else if (type == VIGENERE) {
       byte[] originalKey = vigenereWithFrequencies(encoded);
-      return "";
+      byte[] inverseKey = vigenereFindInverseKey(originalKey);
+      byte[] decoded = Encrypt.vigenere(encoded, inverseKey);
+      return Helper.bytesToString(decoded);
+      // TODO test
     } else if (type == XOR) {
       return arrayToString(xorBruteForce(encoded));
     }
@@ -52,6 +59,9 @@ public class Decrypt {
    *                         force method
    */
   public static String arrayToString(byte[][] bruteForceResult) {
+    assert bruteForceResult != null;
+    assert bruteForceResult.length != 0;
+
     String result = "";
 
     for (byte[] element : bruteForceResult) {
@@ -72,6 +82,9 @@ public class Decrypt {
    * @return a 2D byte array containing all the possibilities
    */
   public static byte[][] caesarBruteForce(byte[] cipher) {
+    assert cipher != null;
+    assert cipher.length != 0;
+
     final int LOWER_BOUND = -128;
     byte[][] result = new byte[256][cipher.length];
     for (int i = 0; i < result.length; ++i) {
@@ -91,6 +104,9 @@ public class Decrypt {
    * @return the encoding key
    */
   public static byte caesarWithFrequencies(byte[] cipherText) {
+    assert cipherText != null;
+    assert cipherText.length != 0;
+
     float[] frequencies = computeFrequencies(cipherText);
     return caesarFindKey(frequencies);
   }
@@ -177,6 +193,8 @@ public class Decrypt {
    * @return the array of possibilities for the clear text
    */
   public static byte[][] xorBruteForce(byte[] cipher) {
+    assert cipher != null;
+    assert cipher.length != 0;
 
     final int LOWER_BOUND = -128;
     byte[][] result = new byte[255][cipher.length];
@@ -201,9 +219,11 @@ public class Decrypt {
    * @return the byte encoding of the clear text
    */
   public static byte[] vigenereWithFrequencies(byte[] cipher) {
+    assert cipher != null;
+    assert cipher.length != 0;
+
     List<Byte> cipherWithoutSpaces = removeSpaces(cipher);
     int keyLength = vigenereFindKeyLength(cipherWithoutSpaces);
-    System.out.println("The length of the key is: " + keyLength);
     byte[] key = vigenereFindKey(cipherWithoutSpaces, keyLength);
     return key;
   }
@@ -244,15 +264,12 @@ public class Decrypt {
       for (int i = offset; i < cipher.size() - offset; ++i) {
         int x = i - offset;
         if (cipher.get(x) == cipher.get(i)) {
-          // System.out.println("x " + x + " " + cipher.get(x) + " i " + i + " " +
-          // cipher.get(i));
           ++frequenceCounter;
         }
       }
       coincidences.add(frequenceCounter);
       frequenceCounter = 0;
     }
-    System.out.println(coincidences);
 
     // STEP 2
 
@@ -260,7 +277,7 @@ public class Decrypt {
     for (int i = 0; i < Math.ceil(coincidences.size() / 2); ++i) {
       int minimumCounter = 0;
       if (i == 0) {
-        for (int c = 0; c <= 2; ++c) {
+        for (int c = 0; c <= 2; ++c) { // case first element
           if (coincidences.get(i + c) <= coincidences.get(i)) {
             ++minimumCounter;
           }
@@ -268,7 +285,7 @@ public class Decrypt {
         if (minimumCounter >= 3) {
           localMaximums.add(i);
         }
-      } else if (i == 1) {
+      } else if (i == 1) { // case second element
         for (int c = -1; c <= 2; ++c) {
           if (coincidences.get(i + c) <= coincidences.get(i)) {
             ++minimumCounter;
@@ -277,7 +294,7 @@ public class Decrypt {
         if (minimumCounter >= 4) {
           localMaximums.add(i);
         }
-      } else if (i == coincidences.size() - 1) {
+      } else if (i == coincidences.size() - 1) { // case last element
         for (int c = -2; c <= 0; ++c) {
           if (coincidences.get(i + c) <= coincidences.get(i)) {
             ++minimumCounter;
@@ -286,7 +303,7 @@ public class Decrypt {
         if (minimumCounter >= 3) {
           localMaximums.add(i);
         }
-      } else if (i == coincidences.size() - 2) {
+      } else if (i == coincidences.size() - 2) { // case second-last element
         for (int c = -2; c <= 1; ++c) {
           if (coincidences.get(i + c) <= coincidences.get(i)) {
             ++minimumCounter;
@@ -296,36 +313,36 @@ public class Decrypt {
           localMaximums.add(i);
         }
       } else {
-        for (int c = -2; c <= 2; ++c) {
+        for (int c = -2; c <= 2; ++c) { // generic case
           if (coincidences.get(i + c) <= coincidences.get(i)) {
             ++minimumCounter;
           }
         }
         if (minimumCounter >= 5) {
           localMaximums.add(i);
-          // TODO fix that
         }
       }
     }
 
     // STEP 3
 
+    // Hashmap to associate to each size found the frequence of that size
     Map<Integer, Integer> frequencies = new HashMap<Integer, Integer>();
-    for (int i = 1; i < localMaximums.size(); ++i) {
-      int size = localMaximums.get(i) - localMaximums.get(i - 1);
-      if (frequencies.get(size) == null) {
+    for (int i = 1; i < localMaximums.size(); ++i) { // cycle to analize every size in the array
+      int size = localMaximums.get(i) - localMaximums.get(i - 1); // compute the size
+      if (frequencies.get(size) == null) { // if size is not in the map it adds it
         frequencies.put(size, 1);
-      } else {
+      } else { // if size is already in the map it increases its counter
         frequencies.replace(size, frequencies.get(size) + 1);
       }
     }
-    int mostFrequentSize = 0;
-    int mostFrequentSizeFrequence = 0;
-    for (Integer key : frequencies.keySet()) {
+    int mostFrequentSize = 0; // variable to keep track of the most frequent size
+    int mostFrequentSizeFrequence = 0; // variable to keep track of the most frequent size occurencies
+    for (Integer key : frequencies.keySet()) { // iterates over all the found sizes
       Integer frequence = frequencies.get(key);
-      if (mostFrequentSizeFrequence < frequence) {
-        mostFrequentSize = key;
-        mostFrequentSizeFrequence = frequence;
+      if (mostFrequentSizeFrequence < frequence) { // looking for the most frequent one
+        mostFrequentSize = key;// store the most frequent size
+        mostFrequentSizeFrequence = frequence;// store its frequence
       }
     }
 
@@ -351,7 +368,10 @@ public class Decrypt {
    * @return the inverse key to decode the Vigenere cipher text
    */
   public static byte[] vigenereFindKey(List<Byte> cipher, int keyLength) {
-    // @SuppressWarnings("unchecked")
+    assert cipher != null;
+    assert cipher.size() != 0;
+
+    @SuppressWarnings("unchecked")
     ArrayList<Byte>[] subsequences = new ArrayList[keyLength];
     byte[] key = new byte[keyLength];
 
@@ -377,6 +397,14 @@ public class Decrypt {
 
   }
 
+  public static byte[] vigenereFindInverseKey(byte[] originalKey) {
+    byte[] inverseKey = new byte[originalKey.length];
+    for (int i = 0; i < originalKey.length; ++i) {
+      inverseKey[i] = (byte) -originalKey[i];
+    }
+    return inverseKey;
+  }
+
   // -----------------------Basic CBC-------------------------
 
   /**
@@ -387,6 +415,11 @@ public class Decrypt {
    * @return the clear text
    */
   public static byte[] decryptCBC(byte[] cipher, byte[] iv) {
+    assert cipher != null;
+    assert cipher.length != 0;
+    assert iv != null;
+    assert iv.length != 0;
+
     int blockLength = iv.length;
     byte[] decihperedText = new byte[cipher.length];
     byte[] key = Arrays.copyOf(iv, blockLength);

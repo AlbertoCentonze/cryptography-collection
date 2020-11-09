@@ -14,7 +14,7 @@ public class Main {
 
   // ---------------------------MAIN---------------------------
   public static void main(String args[]) {
-    testOtpAllCombinations();
+    breakCipherTest();
   }
 
   public static void testBruteForce() {
@@ -137,8 +137,8 @@ public class Main {
     byte[] key = new byte[] { 5, -17 };
     byte[] cipher = Encrypt.cbc(new byte[] { 10, 28, 30, 45, 56 }, key);
     byte[] decipher = Decrypt.decryptCBC(cipher, key);
-    Helper.printByteArray(cipher);
-    Helper.printByteArray(decipher);
+    // Helper.printByteArray(cipher);
+    // Helper.printByteArray(decipher);
   }
 
   public static void testCaesarFindKey() {
@@ -183,7 +183,7 @@ public class Main {
       byte[] encoded = Encrypt.vigenere(text, key);
       byte[] resultKey = Decrypt.vigenereWithFrequencies(encoded);
       if (!Arrays.equals(resultKey, key))
-        System.out.println("TEST FAILED at key " + Helper.byteArrayToString(key));
+        System.out.println("TEST FAILED");
       ++i;
     }
   }
@@ -232,6 +232,7 @@ public class Main {
       }
       byte[] key = Encrypt.generatePad(size);
       byte[] encoded = Encrypt.vigenere(text, key, true);
+
       byte[] decoded = Encrypt.vigenere(encoded, Helper.keyInverterVigenere(key), true);
       for (int c = 0; c < text.length; ++c) {
         byte a = text[c];
@@ -240,6 +241,7 @@ public class Main {
           System.out.println(c);
         }
       }
+
       ++i;
     }
   }
@@ -280,17 +282,10 @@ public class Main {
     }
   }
 
-  public static void testChallenge() {
-    byte[] challenge = Helper.stringToBytes(Helper.readStringFromFile("challenge-encrypted.txt"));
-    byte[] key = Decrypt.vigenereWithFrequencies(challenge);
-    System.out.println(Helper.byteArrayToString(key));
+  public static void breakCipherTest() {
+    byte[] text = Helper.stringToBytes(Helper.readStringFromFile("long_text.txt"));
+    byte[] encoded = Encrypt.vigenere(text, new byte[] { 120, 45, -89 });
+    String encodedString = Helper.bytesToString(encoded);
+    System.out.println(Decrypt.breakCipher(encodedString, 1));
   }
-
-  public static void decryptChallenge2() {
-    byte[] challenge = Helper.stringToBytes(Helper.readStringFromFile("challenge-encrypted.txt"));
-    byte[] decoded = Encrypt.vigenere(challenge, new byte[] { 101, 106, 101 });
-    String output = Helper.bytesToString(decoded);
-    System.out.println(output);
-  }
-
 }
