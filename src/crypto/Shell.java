@@ -67,16 +67,14 @@ public class Shell {
         int keySize = keySize();
         byte tab[] = keyTab(keySize);
         byte[] encodedMessage = Encrypt.vigenere(messageByte, tab);
-        String result = byteArrayToString(encodedMessage);
-        System.out.println("The encoded message is : " + result);
+        output(encodedMessage);
 
       }
       // AvecXOR
       else if (methode == 2) {
         byte key = (byte) keylengthOf1();
         byte[] encodedMessage = Encrypt.xor(messageByte, key);
-        String result = byteArrayToString(encodedMessage);
-        System.out.println("The encoded message is : " + result);
+        output(encodedMessage);
 
       }
       // Avec ONETIME
@@ -84,10 +82,7 @@ public class Shell {
 
         byte tab[] = keyOneTimePad(message);
         byte[] encodedMessage = Encrypt.oneTimePad(messageByte, tab);
-        String resultBytes = byteArrayToString(encodedMessage);
-        String resultString = Helper.bytesToString(encodedMessage);
-        System.out.println("The encoded message (in byte) is : " + resultBytes);
-        System.out.println("The encoded message is : " + resultString);
+        output(encodedMessage);
       }
       // Avec CBC
       else if (methode == 4) {
@@ -95,8 +90,7 @@ public class Shell {
         int keySize = keySize();
         byte tab[] = keyTab(keySize);
         byte[] encodedMessage = Encrypt.cbc(messageByte, tab);
-        String result = byteArrayToString(encodedMessage);
-        System.out.println("The encoded message is : " + result);
+        output(encodedMessage);
       }
     }
 
@@ -118,7 +112,7 @@ public class Shell {
         String resultString = "";
         for (byte[] possibleLine : result) {
           resultString += Helper.bytesToString(possibleLine);
-          resultString += " ==++== ";
+          resultString += System.lineSeparator();
         }
         Helper.writeStringToFile(resultString, "bruteForceCaesarResult.txt");
       }
@@ -137,7 +131,7 @@ public class Shell {
         String resultString = "";
         for (byte[] possibleLine : result) {
           resultString += Helper.bytesToString(possibleLine);
-          resultString += " ==++== ";
+          resultString += System.lineSeparator();
         }
         Helper.writeStringToFile(resultString, "bruteForceXorResult.txt");
       }
@@ -166,6 +160,7 @@ public class Shell {
     while (!correctAnswer) {
 
       System.out.println(message);
+      System.out.println("Write the number corresponding to your choice");
       for (int i = 1; i <= options.length; ++i) {
         System.out.println(i + "  " + options[i - 1]);
       }
@@ -182,12 +177,32 @@ public class Shell {
   public static String insertText(String message) {
     String text = "";
 
-    System.out.println("File or insert manually?")
-    while (text.equals("")) {
+    int choice = askSomething("choose an option", new String[] { "load message from file", "insert message manually" });
+    if (choice == 0) {
+      System.out.println("In order to load some text from a file you have to put it inside /src/load.txt");
+      int file = askSomething("is your text already there?", new String[] { "yes", "no" });
+      if (file == 0) {
+        text = Helper.readStringFromFile("load.txt");
+        System.out.println("Text loaded correctly");
+        System.out.println(text);
+        return text;
+      }
+      if (file == 1) {
+        System.out.println("put it there and retry then");
+        return insertText(message);
+      } else {
+        return insertText(message);
+      }
+
+    } else if (choice == 1) {
       System.out.println(message);
-      text = keyboard.nextLine();
+      while (text.equals("")) {
+        text = keyboard.nextLine();
+      }
+      return text;
+    } else {
+      return insertText(message);
     }
-    return text;
   }
 
   public static int keylengthOf1() {
@@ -225,5 +240,13 @@ public class Shell {
       tabKey[i] = (byte) keyboard.nextInt();
     }
     return tabKey;
+  }
+
+  public static void output(byte[] cipherText) {
+    System.out.println("Your message in byte is : " + byteArrayToString(cipherText));
+    String cipherTextString = Helper.bytesToString(cipherText);
+    System.out.println("Your message is : " + cipherTextString);
+    Helper.writeStringToFile(cipherTextString, "output.txt");
+    System.out.println("The result was correctly stored into output.txt");
   }
 }
