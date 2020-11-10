@@ -253,6 +253,6 @@ public class Shell {
     String cipherTextString = Helper.bytesToString(cipherText);
     System.out.println("Your message is : " + cipherTextString);
     Helper.writeStringToFile(cipherTextString, "output.txt");
-    System.out.println("The result was correctly stored into output.txt");
+    System.out.println("The result was correctly stored into /src/output.txt");
   }
 }
